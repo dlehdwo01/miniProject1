@@ -160,7 +160,7 @@
             //ajax 실행
             $.ajax({                
                 type : 'POST',
-                url : 'ajax.jsp', // checkUsername.jsp 파일의 경로
+                url : 'ajax.jsp',
                 data : {
                     user_id : userId, type : 'join'
                 },

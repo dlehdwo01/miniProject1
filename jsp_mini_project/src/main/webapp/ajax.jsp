@@ -7,7 +7,7 @@ String type = request.getParameter("type");
 String sql = "";
 
 /* 회원가입  */
-if (type.equals("join")) {
+if (type.equals("join-id")) {
 	sql = "select * from djl_user_info where user_id='" + user_id + "'";
 	ResultSet srs = stmt.executeQuery(sql);
 	if (srs.next()) {

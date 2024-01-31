@@ -111,9 +111,9 @@ to {
             //ajax 실행
             $.ajax({                
                 type : 'POST',
-                url : 'ajax.jsp', // checkUsername.jsp 파일의 경로
+                url : 'ajax.jsp',
                 data : {
-                    user_id : userId, type : 'join'
+                    user_id : userId, type : 'join-id'
                 },
                 success : function (response) {
                     if (response.trim() === 'taken') {
