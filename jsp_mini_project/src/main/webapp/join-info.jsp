@@ -22,6 +22,7 @@
 		<div style="margin-bottom: 40px;">아래 정보를 입력해주세요</div>
 		<form name="join">
 			<div style="position: relative; margin-top: 20px;">
+				<input name="user_id" id="user_id" hidden value="<%=request.getParameter("user_id")%>">
 				<label>
 					<span class="explainInput"> 비밀번호</span>
 					<input class="inputInput" name="user_pwd" type="password" autofocus id="user_pwd">
@@ -162,7 +163,11 @@
                 type : 'POST',
                 url : 'ajax.jsp',
                 data : {
-                    user_id : userId, type : 'join'
+                    user_id : userId, 
+                    user_pwd : userPwd,
+                    user_name : userName,
+                    user_phone : userPhone,                    
+                    type : 'join'
                 },
                 success : function (response) {
                     if (response.trim() === 'taken') {

@@ -6,8 +6,24 @@ String user_id = request.getParameter("user_id");
 String type = request.getParameter("type");
 String sql = "";
 
-/* 회원가입  */
+/* 회원가입-id  */
 if (type.equals("join-id")) {
+	sql = "select * from djl_user_info where user_id='" + user_id + "'";
+	ResultSet srs = stmt.executeQuery(sql);
+	if (srs.next()) {
+		out.println("taken");
+	} else {
+		out.println("available");
+	}
+	return;
+}
+
+/* 회원가입-go~  */
+else if (type.equals("join")) {
+	String user_pwd = request.getParameter("user_pwd");
+	/* user_pwd : userPwd,
+	 user_name : userName,
+	 user_phone : userPhone,       */
 	sql = "select * from djl_user_info where user_id='" + user_id + "'";
 	ResultSet srs = stmt.executeQuery(sql);
 	if (srs.next()) {
@@ -41,8 +57,7 @@ else if (type.equals("login-pwd")) {
 	if (user_pwd.equals(srs.getString("user_pwd"))) {
 		out.println("success");
 		session.setAttribute("user_id", user_id);
-	}
-	else {
+	} else {
 		out.println("failed");
 	}
 	return;
