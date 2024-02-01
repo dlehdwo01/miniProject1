@@ -119,18 +119,18 @@ a:hover {
 }
 
 #container {
-	width: 1700px;
+	width: 1800px;
 	position: relative;
 	margin: 0px auto;
 }
 
-#bg {
+#bg {	
 	background-color: rgba(0, 0, 0, 0.7);
 	padding: 10px;
-
+	width: 100%;
 }
 
-body {
+body{	
 	margin: 0px;
 }
 
@@ -174,7 +174,7 @@ body {
 	border: 1px solid #ccc;
 	background-color: rgb(240, 240, 240);
 	box-sizing: border-box;
-	padding: 20px;
+	padding: 20px;	
 }
 
 
@@ -226,4 +226,7 @@ td {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden
+}
+
+#section-contents{
 }

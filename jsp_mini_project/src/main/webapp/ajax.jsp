@@ -56,10 +56,20 @@ else if (type.equals("login-pwd")) {
 	srs.next();
 	if (user_pwd.equals(srs.getString("user_pwd"))) {
 		out.println("success");
+		HttpSession sessionStatus = request.getSession(true);
 		session.setAttribute("user_id", user_id);
 	} else {
 		out.println("failed");
 	}
 	return;
+}
+
+/* 로그아웃 :: 세션삭제 */
+else if (type.equals("logout")) {
+	HttpSession sessionStatus = request.getSession(false);
+	if (sessionStatus != null) {
+		session.invalidate();
+	}
+	out.print("success");
 }
 %>
