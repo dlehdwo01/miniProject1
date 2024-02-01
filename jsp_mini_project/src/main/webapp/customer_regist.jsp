@@ -27,108 +27,145 @@
 	width: 200px;
 	height: 40px;
 }
-
 </style>
 </head>
 <body>
 	<%@ include file="db/dbconn.jsp"%>
 	<div id="section-contents" style="height: 700px;">
 		<h1>고객등록</h1>
-		<div>asdf</div>
-		<div id="container1" style="height: 400px; width: 250px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; float: left; margin-right: 30px;">
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput"> 고객명</span>
-					<input class="inputInput" name="cus_name" id="cus_name" autofocus>
-				</label>
+		<div style="border: 1px solid #ccc; height: 530px; padding: 20px; background-color: white; border-radius: 10px; padding-top: 0px;">
+			<div style="width: 350px; margin-rigth: 30px; float: left">
+				<h4>고객정보</h4>
 			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 생년월일</span>
-					<input class="inputInput" name="cus_birth" id="cus_birth" autofocus>
-				</label>
+			<div style="width: 700px; margin-rigth: 30px; float: left">
+				<h4>제품정보</h4>
 			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 휴대폰번호</span>
-					<input class="inputInput" name="cus_phone" id="cus_phone" autofocus>
-				</label>
-			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 주소</span>
-					<input class="inputInput" name="cus_addr" id="cus_addr" autofocus>
-				</label>
+			<div style="width: 70px; margin-rigth: 30px; float: left">
+				<h4>기타</h4>
 			</div>
 
-		</div>
-		<div id="container1" style="height: 400px; width: 250px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; float: left; margin-right: 30px;">
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 개통모델</span>
-					<input class="inputInput" name="product_no" id="product_no" autofocus>
-				</label>
+			<div id="container1" style="height: 410px; width: 250px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; clear: both; float: left; margin-right: 30px;">
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput"> 고객명</span>
+						<input class="inputInput" name="cus_name" id="cus_name" autofocus>
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 생년월일(8자리)</span>
+						<input class="inputInput" name="cus_birth" id="cus_birth" maxlength="8">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 주민등록번호 뒤 한자리</span>
+						<input class="inputInput" name="cus_birth" id="cus_birth" maxlength="1">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 휴대폰번호(-제외)</span>
+						<input class="inputInput" name="cus_phone" id="cus_phone" maxlength="11">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 주소</span>
+						<input class="inputInput" name="cus_addr" id="cus_addr">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 상세주소</span>
+						<input class="inputInput" name="cus_addr" id="cus_addr">
+					</label>
+				</div>
+
 			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 일련번호</span>
-					<input class="inputInput" name="product_pkno" id="product_pkno" autofocus>
-				</label>
+			<div id="container1" style="height: 410px; width: 250px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; float: left; margin-right: 30px;">
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 개통모델</span>
+						<input class="inputInput" name="product_no" id="product_no">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 일련번호</span>
+						<input class="inputInput" name="product_pkno" id="product_pkno">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<input class="inputInput" name="product_no" id="product_no" disabled placeholder="색상" style="font-size: 15px; color: dimgray;">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 가격</span>
+						<input class="inputInput" name="telecom" id="telecom">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<div class="inputInput" style="color: dimgrey; font-size: 12px; line-height: 15px; padding-top: 15px; height: 30px;">
+						<span style="font-size: 15px; position: absolute; bottom: 37px; background-color: white"> 약정</span>
+						<input type="radio" name="agreement">
+						요금할인
+						<input type="radio" name="agreement">
+						단말할인
+					</div>
+				</div>
+
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 요금제</span>
+						<input class="inputInput" name="sell_date" id="sell_date">
+					</label>
+				</div>
 			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 개통일자</span>
-					<input class="inputInput" name="sell_date" id="sell_date" autofocus>
-				</label>
+			<div id="container1" style="height: 410px; width: 250px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; float: left; margin-right: 30px;">
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 공시지원금</span>
+						<input class="inputInput" name="product_pkno" id="product_pkno">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 개인지원금</span>
+						<input class="inputInput" name="product_pkno" id="product_pkno">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 판매자</span>
+						<input class="inputInput" name="sell_date" id="sell_date">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> 개통일자</span>
+						<input class="inputInput" name="sales_name" id="sales_name">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> </span>
+						<input class="inputInput" name="telecom" id="telecom">
+					</label>
+				</div>
+				<div class="inputBOX">
+					<label>
+						<span class="explainInput-in"> </span>
+						<input class="inputInput" name="sell_date" id="sell_date">
+					</label>
+				</div>
 			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 판매자</span>
-					<input class="inputInput" name="sales_name" id="sales_name" autofocus>
-				</label>
+			<div id="container1" style="height: 400px; width: 620px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; float: left;">
+				<div>코멘트</div>
+				<div>코멘트 입력</div>
 			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 통신사</span>
-					<input class="inputInput" name="telecom" id="telecom" autofocus>
-				</label>
-			</div>
-		</div>
-		<div id="container1" style="height: 400px; width: 250px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; float: left; margin-right: 30px;">
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"></span>
-					<input class="inputInput" name="product_no" id="product_no" disabled placeholder="색상" style="font-size: 15px; color: dimgray;">
-				</label>
-			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 가격</span>
-					<input class="inputInput" name="product_pkno" id="product_pkno" autofocus>
-				</label>
-			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 공시지원금</span>
-					<input class="inputInput" name="sell_date" id="sell_date" autofocus>
-				</label>
-			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 요금제</span>
-					<input class="inputInput" name="sales_name" id="sales_name" autofocus>
-				</label>
-			</div>
-			<div class="inputBOX">
-				<label>
-					<span class="explainInput-in"> 지원금액</span>
-					<input class="inputInput" name="telecom" id="telecom" autofocus>
-				</label>
-			</div>
-		</div>
-		<div id="container1" style="height: 400px; width: 600px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; float: left; margin-right: 30px;">
-		<div></div>
-		
 		</div>
 	</div>
 

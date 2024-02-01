@@ -6,6 +6,22 @@
 <link rel="stylesheet" href="css.css">
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+.pageNumber {
+	margin: 5px;
+	font-size: 18px;
+	height: 30px;
+	cursor: pointer;
+	font-weight: bold;
+	background-color: none;
+	border: none;
+	color: maroon;
+}
+
+.pageNumber:hover{
+border: 1px solid #ccc;
+}
+</style>
 </head>
 <body>
 	<%@ include file="db/dbconn.jsp"%>
@@ -87,7 +103,9 @@
 			%>
 			<tr>
 				<td style="width: 50px; max-width: 50px"><%=srs.getString("rn")%></td>
-				<td style="width: 100px; max-width: 100px"><a><%=srs.getString("cus_name")%></a></td>
+				<td style="width: 100px; max-width: 100px">
+					<a><%=srs.getString("cus_name")%></a>
+				</td>
 				<td><%=srs.getString("cus_birth")%></td>
 				<td><%=srs.getString("cus_phone")%></td>
 				<td style="text-align: left;">
@@ -195,7 +213,7 @@
 					out.println("<b style='color:black; margin:5px; font-size: 18px;'>" + i + "</b> ");
 				} else {
 			%>
-			<input type="button" value="<%=i%>" style="margin: 5px; font-size: 18px; height: 30px; cursor: pointer; font-weight: bold; background-color: none; border: none; color: blue;" name="page" onclick="movePage('<%=i%>')">
+			<input type="button" value="<%=i%>" class="pageNumber" name="page" onclick="movePage('<%=i%>')">
 			<%
 			}
 			}
@@ -209,8 +227,6 @@
 </body>
 </html>
 <script>
-    
-
     $(function () {
         // Enter 키 이벤트 처리
         $('#keyword').on('keypress', function (event) {
