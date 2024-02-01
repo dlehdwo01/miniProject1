@@ -49,9 +49,10 @@
 				<th>개통일자</th>
 				<th>판매자</th>
 				<th>통신사</th>
+				<th>요금제</th>
 				<th>개통상태</th>
 				<th>
-					<input type="button" value="삭제" class="search-btn" style="position: absolute; bottom: 50px; right: 10px" onclick="fn_cusDelete()">
+					<input type="button" value="삭제" class="search-btn" style="position: absolute; bottom: 50px; right: 10px" id="cusDelete">
 					선택
 				</th>
 			</tr>
@@ -68,14 +69,14 @@
 			showList = thisPage * 20;
 
 			/* 검색x 고객 조회 */
-			String sql = " from (select rownum as rn, t.* from (SELECT c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' order by sell_date) t ) ";
-			
+			String sql = " from (select rownum as rn, t.* from (SELECT mobileplan,c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' order by sell_date) t ) ";
+
 			/* 20명 조회 */
 			String rn = " where rn>" + (showList - 20) + " and rn<=" + showList;
-			
+
 			/* 검색 고객 조회 */
 			if (request.getParameter("keyword") != null && !"".equals(request.getParameter("keyword"))) {
-				sql = " from (select rownum as rn, t.* from (SELECT c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' and "
+				sql = " from (select rownum as rn, t.* from (SELECT mobileplan,c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' and "
 				+ request.getParameter("keyword-type") + " like '%" + request.getParameter("keyword")
 				+ "%' order by sell_date) t )";
 			}
@@ -86,7 +87,7 @@
 			%>
 			<tr>
 				<td style="width: 50px; max-width: 50px"><%=srs.getString("rn")%></td>
-				<td style="width: 150px; max-width: 150px"><%=srs.getString("cus_name")%></td>
+				<td style="width: 100px; max-width: 100px"><a><%=srs.getString("cus_name")%></a></td>
 				<td><%=srs.getString("cus_birth")%></td>
 				<td><%=srs.getString("cus_phone")%></td>
 				<td style="text-align: left;">
@@ -116,7 +117,7 @@
 					} ;
 					%>
 				</td>
-				<td style="width: 100px; max-width: 100px">
+				<td style="width: 70px; max-width: 70px">
 					<%
 					if (srs.getString("sell_date") == null) {
 						out.print("");
@@ -143,6 +144,15 @@
 					} ;
 					%>
 				</td>
+				<td style="width: 120px; max-width: 120px">
+					<%
+					if (srs.getString("MOBILEPLAN") == null) {
+						out.print("");
+					} else {
+						out.print(srs.getString("MOBILEPLAN"));
+					} ;
+					%>
+				</td>
 				<td style="width: 100px; max-width: 100px">
 					<%
 					if (srs.getString("status") == null) {
@@ -153,7 +163,7 @@
 					%>
 				</td>
 				<td>
-					<input type="checkbox" value="<%=srs.getString("cus_no")%>" name="deleteCheck">
+					<input type="checkbox" value="<%=srs.getString("cus_no")%>" name="cus_no[]" id="deleteCheck">
 				</td>
 			</tr>
 			<%
@@ -199,6 +209,8 @@
 </body>
 </html>
 <script>
+    
+
     $(function () {
         // Enter 키 이벤트 처리
         $('#keyword').on('keypress', function (event) {
