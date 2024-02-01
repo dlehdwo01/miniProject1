@@ -43,8 +43,9 @@ td {
 			</div>
 			<div id="header-menu">
 				<span class="menu" onclick='fn_loadPage("customer_list")'>고객목록</span>
+				<span class="menu" onclick='fn_loadPage("customer_regist")'>고객등록</span>
 				<span class="menu" onclick="fn_loadPage('inventory_management')">재고관리</span>
-				<span class="menu">관리자메뉴</span>
+				<span class="menu" onclick="fn_loadPage('admin_menu')">관리자메뉴</span>
 			</div>
 			<div id="section">
 				<%
@@ -53,15 +54,26 @@ td {
 					<%@include file="customer_list.jsp" %>
 					<%					
 				}
+				else if ("customer_regist".equals(request.getParameter("section"))) {
+					%>
+					<%@include file="customer_regist.jsp" %>
+					<%					
+				}
 				else if ("customer_list".equals(request.getParameter("section"))) {
 					%>
 					<%@include file="customer_list.jsp" %>
 					<%					
-				} else if("inventory_management".equals(request.getParameter("section"))){
+				}
+				else if("inventory_management".equals(request.getParameter("section"))){
 					%>
 					<%@include file="inventory_management.jsp" %>
 					<%					
 				}
+				else if("admin_menu".equals(request.getParameter("section"))){
+						%>
+						<%@include file="admin_menu.jsp" %>
+						<%					
+					}
 				%>
 
 			</div>
