@@ -50,30 +50,26 @@ td {
 			<div id="section">
 				<%
 				if ("main".equals(request.getParameter("section"))) {
-					%>
-					<%@include file="customer_list.jsp" %>
-					<%					
+				%>
+				<%@include file="customer_list.jsp"%>
+				<%
+				} else if ("customer_regist".equals(request.getParameter("section"))) {
+				%>
+				<%@include file="customer_regist.jsp"%>
+				<%
+				} else if ("customer_list".equals(request.getParameter("section"))) {
+				%>
+				<%@include file="customer_list.jsp"%>
+				<%
+				} else if ("inventory_management".equals(request.getParameter("section"))) {
+				%>
+				<%@include file="inventory_management.jsp"%>
+				<%
+				} else if ("admin_menu".equals(request.getParameter("section"))) {
+				%>
+				<%@include file="admin_menu.jsp"%>
+				<%
 				}
-				else if ("customer_regist".equals(request.getParameter("section"))) {
-					%>
-					<%@include file="customer_regist.jsp" %>
-					<%					
-				}
-				else if ("customer_list".equals(request.getParameter("section"))) {
-					%>
-					<%@include file="customer_list.jsp" %>
-					<%					
-				}
-				else if("inventory_management".equals(request.getParameter("section"))){
-					%>
-					<%@include file="inventory_management.jsp" %>
-					<%					
-				}
-				else if("admin_menu".equals(request.getParameter("section"))){
-						%>
-						<%@include file="admin_menu.jsp" %>
-						<%					
-					}
 				%>
 
 			</div>
@@ -97,8 +93,33 @@ td {
 <script>
     var user_id ='<%=session.getAttribute("user_id")%>';
 
+
     function fn_loadPage(page) {
-        location.href="main.jsp?section="+page;
-        
+        location.href = "main.jsp?section=" + page;
+    }
+    function fn_logout() {
+        if (user_id == null) {
+            location.href = "login-id.jsp";
+        }
+        if (confirm("정말 로그아웃 하시겠습니까?")) {
+
+            //ajax 실행
+            $.ajax({
+                type : 'POST',
+                url : 'ajax.jsp',
+                data : {
+                    type : 'logout'
+                },
+                success : function (response) {
+                    if (response.trim() === 'success') {
+                        location.href = "login-id.jsp";
+                        return;
+                    }
+                },
+                error : function (error) {
+                    console.error('에러 발생:', error);
+                }
+            });
+        }
     }
 </script>
