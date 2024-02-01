@@ -8,6 +8,19 @@
 <title>대리점::직원로그인</title>
 </head>
 <body>
+
+<%
+if(request.getParameter("user_id")==null){
+	session.invalidate();
+	%>
+	<script>
+	alert("잘못된 접근입니다");
+	
+	location.href="login-id.jsp";
+	</script>
+	<%
+}
+%>
 	<div id="container1">
 		<div style="margin-bottom: 40px;">
 			<h1>대리점::고객관리시스템</h1>
@@ -96,7 +109,7 @@
                 },
                 success : function (response) {
                     if (response.trim() === 'success') {
-                        location.href = "main.jsp";
+                        location.href = "main.jsp?section=main";
                         return;
                     } else if (response.trim() === 'failed') {
                         $('.noId').text('비밀번호가 일치하지 않습니다.');

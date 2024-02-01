@@ -3,7 +3,6 @@
 <html>
 <head>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 <link rel="stylesheet" href="css.css">
 <meta charset="UTF-8">
 <title>대리점::직원가입</title>
@@ -43,7 +42,7 @@ to {
 			</div>
 			<div style="color: red; margin-top: 10px;" class='noId'></div>
 			<div class="join-next">
-				<input class="prev buttonbox" type="button" value="뒤로" onclick="history.back()">
+				<input class="prev buttonbox" type="button" value="뒤로" onclick='history.back()'>
 				<input class="next buttonbox" type="button" value="다음" onclick="fn_idCheck()">
 			</div>
 		</form>
@@ -53,6 +52,7 @@ to {
 </html>
 <script>
     var join = document.join;
+    
 
     $(function () {
         $(".inputInput").on("click", function () {

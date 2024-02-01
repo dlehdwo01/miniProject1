@@ -5,7 +5,7 @@
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <link rel="stylesheet" href="css.css">
 <meta charset="UTF-8">
-<title>동재몰::직원가입</title>
+<title>대리점::직원가입</title>
 
 <style>
 </style>
@@ -48,7 +48,7 @@
 			</div>
 			<div style="color: red; margin-top: 10px;" class='noInput'></div>
 			<div class="join-next">
-				<input class="prev buttonbox" type="button" value="뒤로">
+				<input class="prev buttonbox" type="button" value="뒤로" onclick='history.back()'>
 				<input class="next buttonbox" type="button" value="다음" onclick="fn_join()">
 			</div>
 		</form>
@@ -113,6 +113,7 @@
     
     var join=document.join;
      function fn_join() {
+         var userId =document.querySelector("#user_id").value;
         var userPwd =document.querySelector("#user_pwd").value;
         var userPwdCheck =document.querySelector("#user_pwdCheck").value;
         var userName =document.querySelector("#user_name").value;
@@ -170,20 +171,12 @@
                     type : 'join'
                 },
                 success : function (response) {
-                    if (response.trim() === 'taken') {
-                        $('.noId').text('이미 사용 중인 아이디입니다.');
-                        $("#container1").addClass("vibration");
-                        $("#container1").css("border",'1px solid red');
-                        setTimeout(function () {
-                            $("#container1").removeClass("vibration");
-                            $("#container1").css("border",'1px solid #ccc');
-                        }, 300);                        
-                        return;
-                    } else if (response.trim() === 'available') {
-                        location.href = "join-info.jsp?user_id=" + userId;
+                    if (response.trim() === 'success') {                        
+                        location.href="join-success.jsp";
                         return;
                     } else {
                         $('.noId').text('오류 발생');
+                        return;
                     }
                 },
                 error : function (error) {

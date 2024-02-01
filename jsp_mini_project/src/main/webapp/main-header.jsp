@@ -42,28 +42,12 @@ td {
 				</div>
 			</div>
 			<div id="header-menu">
-				<span class="menu" onclick='fn_loadPage("customer_list")'>고객목록</span>
-				<span class="menu" onclick="fn_loadPage('inventory_management')">재고관리</span>
+				<span class="menu" onclick="fn_loadPage('customer_list.jsp')">고객목록</span>
+				<span class="menu" onclick="fn_loadPage('inventory_management.jsp')">재고관리</span>
 				<span class="menu">관리자메뉴</span>
 			</div>
 			<div id="section">
-				<%
-				if ("main".equals(request.getParameter("section"))) {
-					%>
-					<%@include file="customer_list.jsp" %>
-					<%					
-				}
-				else if ("customer_list".equals(request.getParameter("section"))) {
-					%>
-					<%@include file="customer_list.jsp" %>
-					<%					
-				} else if("inventory_management".equals(request.getParameter("section"))){
-					%>
-					<%@include file="inventory_management.jsp" %>
-					<%					
-				}
-				%>
-
+				<%@ include file="customer_list.jsp"%>
 			</div>
 			<!-- section -->
 		</div>
@@ -83,10 +67,43 @@ td {
 </body>
 </html>
 <script>
+	/*  */
     var user_id ='<%=session.getAttribute("user_id")%>';
-
+    
     function fn_loadPage(page) {
-        location.href="main.jsp?section="+page;
-        
+        // ajax 실행
+        $.ajax({
+            type : 'GET', // 또는 'POST'
+            url : page,
+            success : function (response) {
+                $("#section").html(response);
+            },
+            error : function (error) {
+                console.error('에러 발생:', error);
+            }
+        });
+    }
+
+    function fn_logout() {
+        if (confirm("정말 로그아웃 하시겠습니까?")) {
+
+            //ajax 실행
+            $.ajax({
+                type : 'POST',
+                url : 'ajax.jsp',
+                data : {
+                    type : 'logout'
+                },
+                success : function (response) {
+                    if (response.trim() === 'success') {
+                        location.href = "login-id.jsp";
+                        return;
+                    }
+                },
+                error : function (error) {
+                    console.error('에러 발생:', error);
+                }
+            });
+        }
     }
 </script>
