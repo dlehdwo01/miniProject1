@@ -195,7 +195,7 @@
 					</div>
 					<div class="inputBOX">
 						<label>
-							<span class="explainInput-in"> 판매일자(6자리)</span>
+							<span class="explainInput-in"> 판매일자(8자리)</span>
 							<input class="inputInput" name="sell_date" id="sell_date" maxlength="8">
 						</label>
 					</div>

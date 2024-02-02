@@ -149,7 +149,7 @@ else if (type.equals("registC")){
 			"'"+mobileplan+"',"+
 			"'"+telfund+"',"+
 			"'"+fund+"',"+
-			"'"+contract+"')";
+			"'"+contract+"',djl_sell_no_seq.nextval)";
 	 stmt.executeUpdate(sellSql);	
 	conn.close(); 
 	out.print("success");
