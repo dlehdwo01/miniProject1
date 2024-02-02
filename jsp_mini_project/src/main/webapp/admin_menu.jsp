@@ -11,7 +11,12 @@
 	<%@ include file="db/dbconn.jsp"%>
 	<div id="section-contents">
 		<h1>관리자메뉴</h1>
-		<div></div>
+		<div style="border: 1px solid #ccc; height: 530px; padding: 20px; background-color: white; border-radius: 10px; padding-top: 0px;">
+		<div>
+		</div>
+		
+		
+		</div>
 	</div>
 	<!-- section contents -->
 	<%

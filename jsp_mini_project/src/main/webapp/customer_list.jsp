@@ -16,11 +16,18 @@
 	background-color: none;
 	border: none;
 	color: maroon;
+	box-sizing: border-box;
 }
 
-.pageNumber:hover{
-border: 1px solid #ccc;
+a {
+	text-decoration: none;
+	color: navy;
 }
+
+/* .pageNumber:hover {
+	border: 1px solid #ccc;
+	
+} */
 </style>
 </head>
 <body>
@@ -85,14 +92,14 @@ border: 1px solid #ccc;
 			showList = thisPage * 20;
 
 			/* 검색x 고객 조회 */
-			String sql = " from (select rownum as rn, t.* from (SELECT mobileplan,c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' order by sell_date) t ) ";
+			String sql = " from (select rownum as rn, t.* from (SELECT mobileplan,c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr1,cus_addr2 ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' order by sell_date) t ) ";
 
 			/* 20명 조회 */
 			String rn = " where rn>" + (showList - 20) + " and rn<=" + showList;
 
 			/* 검색 고객 조회 */
 			if (request.getParameter("keyword") != null && !"".equals(request.getParameter("keyword"))) {
-				sql = " from (select rownum as rn, t.* from (SELECT mobileplan,c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' and "
+				sql = " from (select rownum as rn, t.* from (SELECT mobileplan,c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr1,cus_addr2 ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' and "
 				+ request.getParameter("keyword-type") + " like '%" + request.getParameter("keyword")
 				+ "%' order by sell_date) t )";
 			}
@@ -104,16 +111,21 @@ border: 1px solid #ccc;
 			<tr>
 				<td style="width: 50px; max-width: 50px"><%=srs.getString("rn")%></td>
 				<td style="width: 100px; max-width: 100px">
-					<a><%=srs.getString("cus_name")%></a>
+					<a href="main.jsp?section=customer_view&cus_no=<%=srs.getString("cus_no")%>"><%=srs.getString("cus_name")%></a>
 				</td>
 				<td><%=srs.getString("cus_birth")%></td>
 				<td><%=srs.getString("cus_phone")%></td>
 				<td style="text-align: left;">
 					<%
-					if (srs.getString("cus_addr") == null) {
+					if (srs.getString("cus_addr1") == null) {
 						out.print("");
 					} else {
-						out.print(srs.getString("cus_addr"));
+						out.print(srs.getString("cus_addr1")+" ");
+					} ;
+					if (srs.getString("cus_addr2") == null) {
+						out.print("");
+					} else {
+						out.print(srs.getString("cus_addr2"));
 					} ;
 					%>
 				</td>
@@ -191,6 +203,7 @@ border: 1px solid #ccc;
 
 
 		<div style="text-align: center; height: 20px; display: flex; justify-content: center;">
+		
 			<%
 			/* 검색 결과를 기준으로 cnt 확인 */
 			String cntSql = "SELECT COUNT(*) as cnt " + sql;
@@ -210,7 +223,10 @@ border: 1px solid #ccc;
 
 			for (int i = startPage; i <= endPage; i++) {
 				if (i == thisPage) {
-					out.println("<b style='color:black; margin:5px; font-size: 18px;'>" + i + "</b> ");
+					%>
+					<input type="button" value="<%=i%>" class="pageNumber" name="page" style="cursor: text; color: olive;">
+					<%
+					
 				} else {
 			%>
 			<input type="button" value="<%=i%>" class="pageNumber" name="page" onclick="movePage('<%=i%>')">

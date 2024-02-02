@@ -63,24 +63,36 @@ td {
 				%>
 				<%@include file="customer_list.jsp"%>
 				<%
+				
 				} else if ("customer_regist".equals(request.getParameter("section"))) {
 				%>
 				<%@include file="customer_regist.jsp"%>
 				<%
+				
 				} else if ("customer_list".equals(request.getParameter("section"))) {
 				%>
 				<%@include file="customer_list.jsp"%>
 				<%
+				
 				} else if ("inventory_management".equals(request.getParameter("section"))) {
 				%>
 				<%@include file="inventory_management.jsp"%>
 				<%
+				
 				} else if ("admin_menu".equals(request.getParameter("section"))) {
 				%>
 				<%@include file="admin_menu.jsp"%>
 				<%
+				
+				} else if ("customer_view".equals(request.getParameter("section"))) {
+				%>
+				<%@include file="customer_view.jsp"%>
+				<%
+				
 				}
 				%>
+
+
 
 			</div>
 			<!-- section -->
@@ -101,8 +113,8 @@ td {
 </body>
 </html>
 <script>
+
     var user_id ="<%=session.getAttribute("user_id")%>";
-    /*  */
 
     function fn_loadPage(page) {
         location.href = "main.jsp?section=" + page;

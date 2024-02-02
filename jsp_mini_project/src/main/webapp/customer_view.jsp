@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.text.SimpleDateFormat"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -71,19 +72,56 @@
 .button:hover {
 	background-color: rgba(0, 0, 0, 0.2);
 }
+
+th, td {
+	font-size: 13px;
+	padding: 10px;
+}
+
+th {
+	padding: 10px 5px;
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+table {
+	margin: 0px auto;
+}
 </style>
 </head>
 <body>
 	<%@ include file="db/dbconn.jsp"%>
-	<form name="registCustomer" id="registCustomer">
+	<%
+	SimpleDateFormat DateFormat = new SimpleDateFormat("yyyyMMdd");
+	String cus_no = request.getParameter("cus_no");
+	String sql = "select * from djl_cus_info c left join djl_sell s on c.cus_no = s.cus_no where deleteyn='N' and c.cus_no="
+			+ cus_no;
+	ResultSet srs = stmt.executeQuery(sql);
+
+	/* 고객정보 필드 */
+	if (!srs.next()) {
+	%>
+	<script>
+        alert("잘못된 접근입니다.");
+        location.href = "main.jsp?section=customer_list";
+    </script>
+	<%
+	}
+	%>
+
+
+
+	<form name="viewCustomer" id="viewCustomer">
 		<div id="section-contents" style="height: 700px;">
-			<h1>고객등록</h1>
+			<h1>고객조회</h1>
 			<div style="border: 1px solid #ccc; height: 530px; padding: 20px; background-color: white; border-radius: 10px; padding-top: 0px;">
 				<div style="width: 350px; margin-rigth: 30px; float: left">
 					<h4>고객정보</h4>
 				</div>
 				<div style="width: 700px; margin-rigth: 30px; float: left">
-					<h4>판매정보</h4>
+					<h4>
+						판매이력
+						<span>판매일자 클릭 상세보기</span>
+					</h4>
 				</div>
 				<div style="width: 70px; margin-rigth: 30px; float: left">
 					<h4>기타</h4>
@@ -93,125 +131,118 @@
 					<div class="inputBOX">
 						<label>
 							<span class="explainInput"> 고객명</span>
-							<input class="inputInput" name="cus_name" id="cus_name" autofocus>
+							<input class="inputInput" name="cus_name" id="cus_name" value="<%=srs.getString("cus_name")%>">
 						</label>
 					</div>
 					<div class="inputBOX">
 						<label>
-							<span class="explainInput-in"> 생년월일(8자리)</span>
-							<input class="inputInput" name="cus_birth" id="cus_birth" maxlength="8">
+							<span class="explainInput"> 생년월일(8자리)</span>
+							<input class="inputInput" name="cus_birth" id="cus_birth" maxlength="8" value="<%=DateFormat.format(srs.getDate("cus_birth"))%>">
 						</label>
 					</div>
 					<div class="inputBOX">
 						<div class="inputInput" style="color: dimgrey; font-size: 12px; line-height: 15px; padding-top: 15px; height: 30px;">
 							<span style="font-size: 15px; position: absolute; bottom: 37px; background-color: white"> 성별</span>
+							<%
+							if ("M".equals(srs.getString("cus_gender").trim())) {
+							%>
 							<input type="radio" name="cus_gender" value="M" checked>
 							남자
 							<input type="radio" name="cus_gender" value="F">
 							여자
+							<%
+							} else {
+							%>
+							<input type="radio" name="cus_gender" value="M">
+							남자
+							<input type="radio" name="cus_gender" value="F" checked>
+							여자
+							<%
+							}
+							%>
 						</div>
 					</div>
 					<div class="inputBOX">
 						<label>
-							<span class="explainInput-in"> 휴대폰번호(-제외)</span>
-							<input class="inputInput" name="cus_phone" id="cus_phone" maxlength="11">
+							<span class="explainInput"> 휴대폰번호(-제외)</span>
+							<input class="inputInput" name="cus_phone" id="cus_phone" maxlength="11" value="<%=srs.getString("cus_phone")%>">
 						</label>
 					</div>
 					<div class="inputBOX">
 						<label>
-							<span class="explainInput-in"> 주소</span>
-							<input class="inputInput" name="cus_addr1" id="cus_addr1">
+							<span class="explainInput"> 주소</span>
+							<input class="inputInput" name="cus_addr1" id="cus_addr1" value="<%=srs.getString("cus_addr1")%>">
 						</label>
 					</div>
 					<div class="inputBOX">
 						<label>
-							<span class="explainInput-in"> 상세주소</span>
-							<input class="inputInput" name="cus_addr2" id="cus_addr2">
+							<span class="explainInput"> 상세주소</span>
+							<input class="inputInput" name="cus_addr2" id="cus_addr2" value="<%if (srs.getString("cus_addr2") == null) {
+	out.print("");
+} else {
+	out.print(srs.getString("cus_addr2"));
+}%>">
 						</label>
 					</div>
+				</div>
 
-				</div>
-				<div id="container1" style="height: 410px; width: 250px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; float: left; margin-right: 30px;">
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 개통모델</span>
-							<input class="inputInput" name="product_no" id="product_no">
-						</label>
-					</div>
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 일련번호</span>
-							<input class="inputInput" name="product_pkno" id="product_pkno">
-						</label>
-					</div>
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 색상</span>
-							<input class="inputInput" name="product_color" id="product_color">
-							<!-- <input class="inputInput" name="product_color" id="product_color" disabled placeholder="색상" style="font-size: 15px; color: dimgray;"> -->
-						</label>
-					</div>
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 가격</span>
-							<input class="inputInput" name="product_price" id="product_price">
-						</label>
-					</div>
-					<div class="inputBOX">
-						<div class="inputInput" style="color: dimgrey; font-size: 12px; line-height: 15px; padding-top: 15px; height: 30px;">
-							<span style="font-size: 15px; position: absolute; bottom: 37px; background-color: white"> 약정</span>
-							<input type="radio" name="contract" value="요금할인" checked>
-							요금할인
-							<input type="radio" name="contract" value="기기할인">
-							기기할인
-						</div>
-					</div>
 
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 요금제</span>
-							<input class="inputInput" name="mobileplan" id="mobileplan">
-						</label>
-					</div>
+				<%
+				srs = stmt.executeQuery(sql);
+				srs.next();
+				%>
+				<!-- 판매이력 -->
+				<div id="container1" style="height: 450px; width: 632px; margin: 0px; position: static; padding: 10px; background-color: white; text-align: center; float: left; margin-right: 30px; overflow: scroll;">
+					<%
+					if (srs.getString("sell_no")!=null) {
+					%>
+					<table>
+						<tr>
+							<th>판매일자</th>
+							<th>모델</th>
+							<th>색상</th>
+							<th>일련번호</th>
+							<th>통신사</th>
+							<th>약정</th>
+							<th>상태</th>
+							<th>판매자</th>
+						</tr>
+						<%
+						srs = stmt.executeQuery(sql);
+						while (srs.next()) {
+						%>
+						<tr>
+							<td style="max-width: 80px; width: 80px;"><%=DateFormat.format(srs.getDate("sell_date"))%>
+							</td>
+							<td style="max-width: 50px; width: 50px;"><%=srs.getString("product_no")%>
+							</td>
+							<td style="max-width: 60px; width: 60px;"><%=srs.getString("product_color")%>
+							</td>							
+							<td style="max-width: 60px; width: 60px;"><%=srs.getString("product_pkno")%>
+							</td>
+							<td style="max-width: 70px; width: 70px;"><%=srs.getString("telecom")%>
+							</td>
+							<td style="max-width: 70px; width: 70px;"><%=srs.getString("contract")%>
+							</td>
+							<td style="max-width: 70px; width: 70px;"><%=srs.getString("status")%>
+							</td>
+							<td style="max-width: 80px; width: 80px;"><%=srs.getString("sales_name")%>
+							</td>
+						</tr>
+						<%
+						}
+						%>
+					</table>
+					<%
+					} else {
+					%>
+					<div>아무것도 없어요</div>
+					<%
+					}
+					%>
 				</div>
-				<div id="container1" style="height: 410px; width: 250px; margin: 0px; position: static; padding: 30px; text-align: left; float: left; margin-right: 30px;">
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 공시지원금</span>
-							<input class="inputInput" name="telfund" id="telfund">
-						</label>
-					</div>
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 개인지원금</span>
-							<input class="inputInput" name="fund" id="fund">
-						</label>
-					</div>
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 판매자</span>
-							<input class="inputInput" name="sales_name" id="sales_name">
-						</label>
-					</div>
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 판매일자(6자리)</span>
-							<input class="inputInput" name="sell_date" id="sell_date" maxlength="8">
-						</label>
-					</div>
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 통신사</span>
-							<input class="inputInput" name="telecom" id="telecom">
-						</label>
-					</div>
-					<div class="inputBOX">
-						<label>
-							<span class="explainInput"> 개통상태</span>
-							<input class="inputInput" name="status" id="status" value="개통완료">
-						</label>
-					</div>
-				</div>
+
+				<!-- 코멘트이력 -->
 				<div id="container1" style="height: 450px; width: 620px; margin: 0px; position: relative; padding: 10px; background-color: white; text-align: left; float: left;">
 					<div class="comment"></div>
 					<div>
@@ -222,15 +253,14 @@
 			</div>
 			<div style="text-align: center;">
 				<input name="type" value="registC" hidden="hidden">
-				<input type="button" value="고객등록" class="button" onclick="fn_button('submit')">
-				<input type="button" value="취소" class="button" onclick="fn_button('cancel')">
+				<input type="button" value="수정" class="button" onclick="fn_button('submit')">
+				<input type="button" value="목록으로" class="button" onclick="history.back()">
 			</div>
 		</div>
 	</form>
 	<%
 	conn.close();
 	%>
-
 </body>
 
 </html>
@@ -278,55 +308,6 @@
                     || registC.cus_phone.value.length != 11) {
                 alert("휴대폰번호를 제대로 입력해주세요");
                 return;
-            } else if (registC.product_no.value == "") {
-                alert("개통모델을 입력해주세요");
-                return;
-            } else if (kor.test(registC.product_no.value)) {
-                alert("개통모델을 제대로 입력해주세요");
-                return;
-            } else if (registC.product_pkno.value == "") {
-                alert("일련번호를 입력해주세요");
-                return;
-            } else if (!number.test(registC.product_pkno.value)) {
-                alert("일련번호는 숫자만 입력해주세요");
-                return;
-            } else if (registC.product_color.value == "") {
-                alert("색상을 입력해주세요");
-                return;
-            } else if (registC.product_price.value == "") {
-                alert("가격을 입력해주세요");
-                return;
-            } else if (registC.mobileplan.value == "") {
-                alert("요금제를 입력해주세요");
-                return;
-            } else if (registC.telfund.value == "") {
-                alert("공시지원금을 입력해주세요");
-                return;
-            } else if (!number.test(registC.telfund.value)) {
-                alert("공시지원금은 숫자만 입력해주세요");
-                return;
-            } else if (registC.fund.value == "") {
-                alert("개인지원금을 입력해주세요");
-                return;
-            } else if (!number.test(registC.fund.value)) {
-                alert("개인지원금은 숫자만 입력해주세요");
-                return;
-            } else if (registC.sales_name.value == "") {
-                alert("판매자를 입력해주세요");
-                return;
-            } else if (registC.sell_date.value == "") {
-                alert("판매일자를 입력해주세요");
-                return;
-            } else if (!number.test(registC.sell_date.value)
-                    || registC.sell_date.value.length != 8) {
-                alert("판매일자를 제대로 입력해주세요");
-                return;
-            } else if (registC.telecom.value == "") {
-                alert("통신사를 입력해주세요");
-                return;
-            } else if (registC.status.value == "") {
-                alert("개통상태를 입력해주세요");
-                return;
             }
             $(function () {
                 var allInputData = $("#registCustomer").serialize();
@@ -337,12 +318,12 @@
                     url : 'ajax.jsp',
                     data : allInputData,
                     success : function (response) {
-                         if (response.trim() === "success") {                             
+                        if (response == "success") {
                             alert("등록완료");
-                            location.href="main.jsp?section=customer_list";
+                            location.href = "main.jsp?section=customer_list";
                         } else {
                             alert("실패");
-                        } 
+                        }
                     },
                     error : function (error) {
                         console.error('에러 발생:', error);
