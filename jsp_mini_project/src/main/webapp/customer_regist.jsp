@@ -341,7 +341,7 @@
                             alert("등록완료");
                             location.href="main.jsp?section=customer_list";
                         } else {
-                            alert("실패");
+                            alert("문제가 계속된다면 관리자에게 문의하세요.");                            
                         } 
                     },
                     error : function (error) {

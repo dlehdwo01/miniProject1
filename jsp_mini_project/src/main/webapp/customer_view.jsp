@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+
 .inputBOX {
 	width: 250px;
 	position: relative;
@@ -38,6 +39,7 @@
 	padding: 5px;
 	box-sizing: border-box;
 	margin: 0px auto;
+	overflow-y: scroll;
 }
 
 .commentTxt {
@@ -58,19 +60,8 @@
 	height: 100px;
 }
 
-.button {
-	margin: 10px;
-	margin-top: 20px;
-	padding: 10px 15px;
-	font-size: 17px;
-	border-radius: 5px;
-	background-color: rgba(0, 0, 0, 0.1);
-	cursor: pointer;
-	padding: 10px 15px;
-}
-
 .button:hover {
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
 th, td {
@@ -85,6 +76,22 @@ th {
 
 table {
 	margin: 0px auto;
+}
+.button {
+	margin: 10px;
+	margin-top: 20px;
+	padding: 10px 15px;
+	font-size: 17px;
+	border-radius: 5px;
+	background-color: rgba(0, 0, 0, 0.025);
+	cursor: pointer;
+	padding: 10px 15px;
+	border:1px solid #ccc;
+}
+
+.cmtTxt{
+border-bottom: 1px solid #ccc;
+margin-top: 10px;
 }
 </style>
 </head>
@@ -113,14 +120,14 @@ table {
 	<form name="viewCustomer" id="viewCustomer">
 		<div id="section-contents" style="height: 700px;">
 			<h1>고객조회</h1>
-			<div style="border: 1px solid #ccc; height: 530px; padding: 20px; background-color: white; border-radius: 10px; padding-top: 0px;">
+			<div style="border: 1px solid #ccc; height: 600px; padding: 20px; background-color: white; border-radius: 10px; padding-top: 0px;">
 				<div style="width: 350px; margin-rigth: 30px; float: left">
 					<h4>고객정보</h4>
 				</div>
 				<div style="width: 700px; margin-rigth: 30px; float: left">
 					<h4>
-						판매이력
-						<span>판매일자 클릭 상세보기</span>
+						판매이력::
+						<span style="font-size: 12px; color: navy;">판매일자 클릭 상세보기</span>
 					</h4>
 				</div>
 				<div style="width: 70px; margin-rigth: 30px; float: left">
@@ -194,7 +201,7 @@ table {
 				<!-- 판매이력 -->
 				<div id="container1" style="height: 450px; width: 632px; margin: 0px; position: static; padding: 10px; background-color: white; text-align: center; float: left; margin-right: 30px; overflow: scroll;">
 					<%
-					if (srs.getString("sell_no")!=null) {
+					if (srs.getString("sell_no") != null) {
 					%>
 					<table>
 						<tr>
@@ -217,7 +224,7 @@ table {
 							<td style="max-width: 50px; width: 50px;"><%=srs.getString("product_no")%>
 							</td>
 							<td style="max-width: 60px; width: 60px;"><%=srs.getString("product_color")%>
-							</td>							
+							</td>
 							<td style="max-width: 60px; width: 60px;"><%=srs.getString("product_pkno")%>
 							</td>
 							<td style="max-width: 70px; width: 70px;"><%=srs.getString("telecom")%>
@@ -236,25 +243,30 @@ table {
 					<%
 					} else {
 					%>
-					<div>아무것도 없어요</div>
-					<%
+					<div style="text-align: center;margin-top:200px; font-size: 20px;">
+						아무것도 없어요😂
+						<%
 					}
 					%>
+					</div>
 				</div>
-
 				<!-- 코멘트이력 -->
-				<div id="container1" style="height: 450px; width: 620px; margin: 0px; position: relative; padding: 10px; background-color: white; text-align: left; float: left;">
-					<div class="comment"></div>
+				<div id="container1" style="height: 450px; width: 620px; position: relative; margin: 0px; position: relative; padding: 10px; background-color: white; text-align: left; float: left; ">
+					<div class="comment ">
+					<div class="cmtTxt">asdfaf</div>
+					<div class="cmtTxt">asdfaf</div>
+					<div class="cmtTxt">asdfaf</div>
+					</div>
 					<div>
-						<textarea class="commentTxt"></textarea>
+						<textarea class="commentTxt" name="cmt"></textarea>
 						<input value="등록" type="button" class="commentRegist">
 					</div>
 				</div>
-			</div>
-			<div style="text-align: center;">
-				<input name="type" value="registC" hidden="hidden">
-				<input type="button" value="수정" class="button" onclick="fn_button('submit')">
-				<input type="button" value="목록으로" class="button" onclick="history.back()">
+				<div style="text-align: center;">
+					<input name="type" value="registC" hidden="hidden">
+					<input type="button" value="수정" class="button" onclick="fn_button('submit')">
+					<input type="button" value="목록으로" class="button" onclick="history.back()">
+				</div>
 			</div>
 		</div>
 	</form>

@@ -259,9 +259,12 @@ a {
     });
     function fn_searchBtn() {
         var keyword = document.querySelector("#keyword").value;
+        if(keyword==""){
+            alert("최소 한 글자 이상 입력해주세요.")
+        }else{
         var keywordType = document.querySelector("#keyword-type").value;
         location.href = "main.jsp?section=customer_list&keyword=" + keyword
-                + "&keyword-type=" + keywordType;
+                + "&keyword-type=" + keywordType;}
     }
 
     function movePage(page) {

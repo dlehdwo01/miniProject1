@@ -28,7 +28,7 @@ else if (type.equals("join")) {
 	String user_phone = request.getParameter("user_phone");
 
 	sql = "insert into djl_user_info values ('" + user_id + "','" + user_name + "','" + user_pwd + "','" + user_phone
-	+ "','U',0)";
+	+ "','U',0,sysdate)";
 	stmt.executeUpdate(sql);
 	out.println("success");
 	conn.close();
@@ -88,71 +88,57 @@ else if (type.equals("logout")) {
 	return;
 }
 
-/* 새로운 고객 등록 */
+/* 고객 등록 */
 else if (type.equals("registC")){
-	
-	/* 고객정보등록 */
-	String cus_name=request.getParameter("cus_name");
-	String cus_birth=request.getParameter("cus_birth");
-	String cus_gender=request.getParameter("cus_gender");
+	try{
+	/* 정보 등록 */	
 	String cus_phone=request.getParameter("cus_phone");
 	cus_phone=cus_phone.substring(0, 3) + "-" + cus_phone.substring(3, 7) + "-" + cus_phone.substring(7);	
-	String cus_addr1=request.getParameter("cus_addr1");
-	String cus_addr2=request.getParameter("cus_addr2");
-	
+		
 	 sql="INSERT INTO djl_cus_info "+ 
 		    " (CUS_NO, CUS_NAME, CUS_BIRTH, CUS_ADDR1, CUS_ADDR2,CUS_PHONE, CUS_GENDER, CUS_CDATE,DELETEYN) "+
 		    " VALUES ( "+
 		        " DJL_CUS_NO_SEQ.NEXTVAL, "+
-		        " '"+cus_name+"',"+
-		        "TO_DATE('"+cus_birth+"', 'YYYYMMDD'),"+
-		        "'"+cus_addr1+"',"+ 
-		        "'"+cus_addr2+"',"+
+		        " '"+request.getParameter("cus_name")+"',"+
+		        "TO_DATE('"+request.getParameter("cus_birth")+"', 'YYYYMMDD'),"+
+		        "'"+request.getParameter("cus_addr1")+"',"+ 
+		        "'"+request.getParameter("cus_addr2")+"',"+
 		        "'"+cus_phone+"',"+
-		        "'"+cus_gender+"',"+
+		        "'"+request.getParameter("cus_gender")+"',"+
 		        "sysdate,"+
 		        "'N'"+
 		    ")";
 	 stmt.executeUpdate(sql);
 	 
-	sql="select * from djl_cus_info where cus_name='"+cus_name+"' and cus_birth='"+cus_birth+"'";
+	 /* 고객NO SELECT -> SELL 레코드 추가 */
+	sql="select * from djl_cus_info where cus_name='"+request.getParameter("cus_name")+"' and cus_birth='"+request.getParameter("cus_birth")+"'";
 	ResultSet srs=stmt.executeQuery(sql);
 	String cus_no="";
 	 if(srs.next()){
 		 cus_no=srs.getString("cus_no");
-	 }
-	 
-	String product_no=request.getParameter("product_no");
-	String product_pkno=request.getParameter("product_pkno");
-	String product_color=request.getParameter("product_color");
-	String product_price=request.getParameter("product_price");
-	String contract=request.getParameter("contract");
-	String mobileplan=request.getParameter("mobileplan");
-	String telfund=request.getParameter("telfund");
-	String fund=request.getParameter("fund");
-	String sales_name=request.getParameter("sales_name");
-	String sell_date=request.getParameter("sell_date");
-	String telecom=request.getParameter("telecom");
-	String status=request.getParameter("status");
+	 }	 
 	
 	 String sellSql="INSERT INTO DJL_SELL "+			
 			"VALUES ("+
 			cus_no+","+
-			"'"+sales_name+"',"+
-			"'"+product_no+"',"+
-			"'"+product_pkno+"',"+
-			"'"+product_color+"',"+
-			"'"+product_price+"',"+
-			"TO_DATE('"+sell_date+"','YYYYMMDD'),"+
-			"'"+status+"',"+
-			"'"+telecom+"',"+
-			"'"+mobileplan+"',"+
-			"'"+telfund+"',"+
-			"'"+fund+"',"+
-			"'"+contract+"',djl_sell_no_seq.nextval)";
+			"'"+request.getParameter("sales_name")+"',"+
+			"'"+request.getParameter("product_no")+"',"+
+			"'"+request.getParameter("product_pkno")+"',"+
+			"'"+request.getParameter("product_color")+"',"+
+			"'"+request.getParameter("product_price")+"',"+
+			"TO_DATE('"+request.getParameter("sell_date")+"','YYYYMMDD'),"+
+			"'"+request.getParameter("status")+"',"+
+			"'"+request.getParameter("telecom")+"',"+
+			"'"+request.getParameter("mobileplan")+"',"+
+			"'"+request.getParameter("telfund")+"',"+
+			"'"+request.getParameter("fund")+"',"+
+			"'"+request.getParameter("contract")+"',djl_sell_no_seq.nextval)";
 	 stmt.executeUpdate(sellSql);	
 	conn.close(); 
 	out.print("success");
+	} catch(Exception e){
+		out.print("error");
+	}	
 	return;
 }
 %>
