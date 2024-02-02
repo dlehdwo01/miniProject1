@@ -75,7 +75,7 @@
 </head>
 <body>
 	<%@ include file="db/dbconn.jsp"%>
-	<form>
+	<form name="registCustomer">
 		<div id="section-contents" style="height: 700px;">
 			<h1>고객등록</h1>
 			<div style="border: 1px solid #ccc; height: 530px; padding: 20px; background-color: white; border-radius: 10px; padding-top: 0px;">
@@ -103,10 +103,13 @@
 						</label>
 					</div>
 					<div class="inputBOX">
-						<label>
-							<span class="explainInput-in"> 주민등록번호 뒤 한자리</span>
-							<input class="inputInput" name="cus_gender" id="cus_gender" maxlength="1">
-						</label>
+						<div class="inputInput" style="color: dimgrey; font-size: 12px; line-height: 15px; padding-top: 15px; height: 30px;">
+							<span style="font-size: 15px; position: absolute; bottom: 37px; background-color: white"> 성별</span>
+							<input type="radio" name="gender" valaue="M" checked>
+							남자
+							<input type="radio" name="gender" valaue="F">
+							여자
+						</div>
 					</div>
 					<div class="inputBOX">
 						<label>
@@ -157,7 +160,7 @@
 					<div class="inputBOX">
 						<div class="inputInput" style="color: dimgrey; font-size: 12px; line-height: 15px; padding-top: 15px; height: 30px;">
 							<span style="font-size: 15px; position: absolute; bottom: 37px; background-color: white"> 약정</span>
-							<input type="radio" name="contract" valaue="요금할인">
+							<input type="radio" name="contract" valaue="요금할인" checked>
 							요금할인
 							<input type="radio" name="contract" valaue="기기할인">
 							기기할인
@@ -171,11 +174,11 @@
 						</label>
 					</div>
 				</div>
-				<div id="container1" style="height: 410px; width: 250px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; float: left; margin-right: 30px;">
+				<div id="container1" style="height: 410px; width: 250px; margin: 0px; position: static; padding: 30px; text-align: left; float: left; margin-right: 30px;">
 					<div class="inputBOX">
 						<label>
 							<span class="explainInput-in"> 공시지원금</span>
-							<input class="inputInput" name="telfund" id="telfund">
+							<input class="inputInput" name="telfund" id="telfund" disabled>
 						</label>
 					</div>
 					<div class="inputBOX">
@@ -228,15 +231,30 @@
 
 </html>
 <script>
+    var registC = document.registCustomer;
+    var koreng=/^[가-힣a-zA-Z]+$/;
+    var number=/^[0-9]+$/;
+
     function fn_button(type) {
-        if (type = "cancel") {
+        if (type == "cancel") {
             if (confirm("작성중인 내용이 모두 사라집니다. 계속 하시겠습니까?")) {
                 location.href = "main.jsp?section=customer_list";
             }
-            return;
-        } else if(type="submit"){
-            if()
-            
+        } else if (type == "submit") {
+            if (registC.cus_name.value == "") {
+                alert("고객명을 입력해주세요");
+                return;
+            } else if(!koreng.test(registC.cus_name.value)){
+                alert("고객명을 제대로 입력해주세요");
+                return;
+            } else if(registC.cus_birth.value == ""){
+                alert("생년월일을 입력해주세요");
+                return;
+            } else if(!number.test(registC.cus_birth.value) ||registC.cus_birth.value.length!=8){
+                alert("생년월일을 제대로 입력해주세요");
+                return;
+            }
+
         }
 
     }
