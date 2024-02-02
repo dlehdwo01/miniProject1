@@ -9,9 +9,9 @@
 </head>
 <body>
 
-<%
-if(request.getParameter("user_id")==null){
-	session.invalidate();
+	<%
+	if (request.getParameter("user_id") == null && session.getAttribute("userr_id")!=null) {
+		session.invalidate();
 	%>
 	<script>
 	alert("잘못된 접근입니다");
@@ -19,8 +19,8 @@ if(request.getParameter("user_id")==null){
 	location.href="login-id.jsp";
 	</script>
 	<%
-}
-%>
+	}
+	%>
 	<div id="container1">
 		<div style="margin-bottom: 40px;">
 			<h1>대리점::고객관리시스템</h1>
@@ -108,7 +108,9 @@ if(request.getParameter("user_id")==null){
                     type : 'login-pwd'
                 },
                 success : function (response) {
-                    if (response.trim() === 'success') {
+                    if(response.trim() === 'adminCall'){
+                        $('.noId').text('비밀번호 입력 5회 실패. 관리자에게 문의하세요'); 
+                    } else if (response.trim() === 'success') {
                         location.href = "main.jsp?section=main";
                         return;
                     } else if (response.trim() === 'failed') {

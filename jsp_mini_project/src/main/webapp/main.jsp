@@ -7,6 +7,10 @@
 <meta charset="UTF-8">
 <title>대리점::고객관리시스템</title>
 <style>
+th {
+	background-color: rgba(120, 120, 180, 0.2);
+}
+
 td {
 	max-width: 200px;
 	text-overflow: ellipsis;
@@ -34,7 +38,13 @@ td {
 						<%=session.getAttribute("user_id")%>
 						<span style="font-weight: bold; font-size: 15px; color: #ccc;">|</span>
 						등급 :
-						<%=session.getAttribute("user_level")%>
+						<%
+						if ("A".equals(session.getAttribute("user_level"))) {
+							out.print("관리자");
+						} else if ("U".equals(session.getAttribute("user_level"))) {
+							out.print("일반");
+						}
+						%>
 						<span style="font-weight: bold; font-size: 15px; color: #ccc;">|</span>
 						접속일시 :
 						<%=session.getAttribute("user_loginTime")%>
@@ -91,8 +101,8 @@ td {
 </body>
 </html>
 <script>
-    var user_id ='<%=session.getAttribute("user_id")%>';
-
+    var user_id ="<%=session.getAttribute("user_id")%>";
+    /*  */
 
     function fn_loadPage(page) {
         location.href = "main.jsp?section=" + page;

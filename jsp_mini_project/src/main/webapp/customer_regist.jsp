@@ -75,7 +75,7 @@
 </head>
 <body>
 	<%@ include file="db/dbconn.jsp"%>
-	<form name="registCustomer">
+	<form name="registCustomer" id="registCustomer">
 		<div id="section-contents" style="height: 700px;">
 			<h1>고객등록</h1>
 			<div style="border: 1px solid #ccc; height: 530px; padding: 20px; background-color: white; border-radius: 10px; padding-top: 0px;">
@@ -98,7 +98,7 @@
 					</div>
 					<div class="inputBOX">
 						<label>
-							<span class="explainInput-in"> 생년월일(8자리)</span>
+							<span class="explainInput-in"> 생년월일(6자리)</span>
 							<input class="inputInput" name="cus_birth" id="cus_birth" maxlength="8">
 						</label>
 					</div>
@@ -195,8 +195,8 @@
 					</div>
 					<div class="inputBOX">
 						<label>
-							<span class="explainInput-in"> 개통일자</span>
-							<input class="inputInput" name="sell_date" id="sell_date">
+							<span class="explainInput-in"> 개통일자(6자리)</span>
+							<input class="inputInput" name="sell_date" id="sell_date" maxlength="6">
 						</label>
 					</div>
 					<div class="inputBOX">
@@ -221,6 +221,7 @@
 				</div>
 			</div>
 			<div style="text-align: center;">
+				<input name="type" value="registC" hidden>
 				<input type="button" value="고객등록" class="button" onclick="fn_button('submit')">
 				<input type="button" value="취소" class="button" onclick="fn_button('cancel')">
 			</div>
@@ -231,10 +232,23 @@
 
 </html>
 <script>
+    /* 조건식 */
     var registC = document.registCustomer;
-    var koreng=/^[가-힣a-zA-Z]+$/;
-    var number=/^[0-9]+$/;
+    var kor = /^[ㄱ-ㅎㅏ-ㅣ가-힣]+$/;
+    var koreng = /^[가-힣a-zA-Z]+$/;
+    var number = /^[0-9]+$/;
 
+    // Enter 키 이벤트 처리
+    $(function () {
+        $('.inputInput').on('keypress', function (event) {
+            if (event.which === 13) {
+                fn_button('submit');
+            }
+        });
+
+    });
+
+    /* 버튼 클릭시 */
     function fn_button(type) {
         if (type == "cancel") {
             if (confirm("작성중인 내용이 모두 사라집니다. 계속 하시겠습니까?")) {
@@ -244,16 +258,83 @@
             if (registC.cus_name.value == "") {
                 alert("고객명을 입력해주세요");
                 return;
-            } else if(!koreng.test(registC.cus_name.value)){
+            } else if (!koreng.test(registC.cus_name.value)) {
                 alert("고객명을 제대로 입력해주세요");
                 return;
-            } else if(registC.cus_birth.value == ""){
+            } else if (registC.cus_birth.value == "") {
                 alert("생년월일을 입력해주세요");
                 return;
-            } else if(!number.test(registC.cus_birth.value) ||registC.cus_birth.value.length!=8){
+            } else if (!number.test(registC.cus_birth.value)
+                    || registC.cus_birth.value.length != 6) {
                 alert("생년월일을 제대로 입력해주세요");
                 return;
+            } else if (registC.cus_phone.value == "") {
+                alert("휴대폰번호를 입력해주세요");
+                return;
+            } else if (!number.test(registC.cus_phone.value)
+                    || registC.cus_phone.value.length != 11) {
+                alert("휴대폰번호를 제대로 입력해주세요");
+                return;
+            } else if (registC.product_no.value == "") {
+                alert("개통모델을 입력해주세요");
+                return;
+            } else if (kor.test(registC.product_no.value)) {
+                alert("개통모델을 제대로 입력해주세요");
+                return;
+            } else if (registC.product_pkno.value == "") {
+                alert("일련번호를 입력해주세요");
+                return;
+            } else if (!number.test(registC.product_pkno.value)) {
+                alert("일련번호는 숫자만 입력해주세요");
+                return;
+            } else if (registC.product_color.value == "") {
+                alert("색상을 입력해주세요");
+                return;
+            } else if (registC.product_price.value == "") {
+                alert("가격을 입력해주세요");
+                return;
+            } else if (registC.mobileplan.value == "") {
+                alert("요금제를 입력해주세요");
+                return;
+            } else if (registC.fund.value == "") {
+                alert("개인지원금을 입력해주세요");
+                return;
+            } else if (!number.test(registC.fund.value)) {
+                alert("개인지원금은 숫자만 입력해주세요");
+                return;
+            } else if (registC.sales_name.value == "") {
+                alert("판매자를 입력해주세요");
+                return;
+            } else if (registC.sell_date.value == "") {
+                alert("개통일자를 입력해주세요");
+                return;
+            } else if (!number.test(registC.sell_date.value)
+                    || registC.sell_date.value.length != 6) {
+                alert("개통일자를 제대로 입력해주세요");
+                return;
+            } else if (registC.telecom.value == "") {
+                alert("통신사를 입력해주세요");
+                return;
+            } else if (registC.status.value == "") {
+                alert("개통상태를 입력해주세요");
+                return;
             }
+            $(function () {
+                var allInputData = $("#registCustomer").serialize();
+
+                //ajax 실행            
+                $.ajax({
+                    type : 'POST',
+                    url : 'ajax.jsp',
+                    data : allInputData,
+                    success : function (response) {
+                        alert(response);
+                    },
+                    error : function (error) {
+                        console.error('에러 발생:', error);
+                    }
+                });
+            });
 
         }
 
