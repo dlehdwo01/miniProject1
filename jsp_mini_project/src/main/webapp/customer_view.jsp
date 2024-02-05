@@ -93,6 +93,7 @@ table {
 	border-bottom: 1px solid #ccc;
 	margin-top: 5px;
 	margin-bottom: 10px;
+	padding-left: 5px;
 	padding-bottom: 5px;
 }
 </style>
@@ -259,7 +260,7 @@ table {
 							cmtSrs = stmt.executeQuery(cmtSql);
 							while (cmtSrs.next()) {
 							%>
-							<div><%=cmtSrs.getString("user_id")%>	|	<%=CMTDateFormat.format(cmtSrs.getDate("cdate"))%></div>
+							<div style="padding:5px;"><%=cmtSrs.getString("user_id")%>	|	<%=CMTDateFormat.format(cmtSrs.getDate("cdate"))%></div>
 							<div class="cmtTxt"><%=cmtSrs.getString("cmt")%></div>
 							<%
 							}

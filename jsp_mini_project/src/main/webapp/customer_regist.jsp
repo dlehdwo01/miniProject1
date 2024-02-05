@@ -101,6 +101,7 @@
 					<h4>히스토리</h4>
 				</div>
 
+				<!-- 고객정보기입란 -->
 				<div id="container1" style="height: 410px; width: 250px; margin: 0px; position: static; padding: 30px; text-align: left; clear: both; float: left; margin-right: 30px;">
 					<div id="container1" style="height: 200px; width: 249px; margin: 0px; padding: 30px; background-color: white; text-align: left; margin-left: -30px; margin-top: -30px; background-color: white; padding-bottom: 9px; margin-bottom: 10px; border: none;" class="info">
 						<div class="inputBOX">
@@ -150,8 +151,9 @@
 							<input class="inputInput" name="cus_addr2" id="cus_addr2">
 						</label>
 					</div>
-
 				</div>
+
+				<!-- 판매정보기입란 -->
 				<div id="container1" style="height: 410px; width: 250px; margin: 0px; position: static; padding: 30px; text-align: left; float: left; margin-right: 30px;">
 					<div class="inputBOX">
 						<label>
@@ -237,10 +239,12 @@
 						</label>
 					</div>
 				</div>
+
+				<!-- 히스토리 입력란 -->
 				<div id="container1" style="height: 450px; width: 620px; margin: 0px; position: relative; padding: 10px; background-color: white; text-align: left; float: left;">
 					<div class="comment"></div>
 					<div>
-						<textarea class="commentTxt" disabled>고객 등록 후 이용 가능합니다.</textarea>
+						<textarea class="commentTxt" disabled>고객 등록시 이용 불가합니다.</textarea>
 						<input value="등록" type="button" class="commentRegist" disabled>
 					</div>
 				</div>
@@ -297,7 +301,11 @@
     $(function () {
         $('.inputInput').on('keypress', function (event) {
             if (event.which === 13) {
-                fn_button('submit');
+                if($("#cusCheck").prop('disabled')){
+                    fn_button('submit');
+            } else{
+                fn_button('select');
+            }
             }
         });
     });

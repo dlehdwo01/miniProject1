@@ -46,19 +46,7 @@ a {
 					<option value="product_no">개통모델</option>
 				</select>
 				<input type="button" value="검색" class="search-btn" onclick="fn_searchBtn()">
-			</div>
-			<!-- <div style="width: 500px; position: absolute; right: 70px;">
-				<input class="search-input">
-				<select>
-					<option>고객명</option>
-					<option>휴대폰번호</option>
-					<option>판매자</option>
-					<option>주소</option>
-					<option>일련번호</option>
-					<option>개통모델</option>
-				</select>
-				<input type="button" value="선택수정" class="search-btn" style="width: 80px">
-			</div> -->
+			</div>			
 		</div>
 		<table>
 			<tr style="position: relative;">

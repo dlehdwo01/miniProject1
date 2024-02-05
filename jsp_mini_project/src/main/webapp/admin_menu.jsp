@@ -64,7 +64,17 @@ td {
 	height: 30px;
 	font-size: 13px;
 	text-align: center;
-	padding:1px 5px;
+	padding: 1px 5px;
+}
+
+.user {
+	font-weight: bold;
+	color: navy;
+	cursor: pointer;
+}
+
+.user:hover {
+	transform: scale(1.05);
 }
 </style>
 </head>
@@ -74,18 +84,15 @@ td {
 		<h1>관리자메뉴</h1>
 		<!-- 메뉴 스크린 -->
 		<div id="cont">
-			<a>유저관리</a>
-			<a>상품관리</a>
-			<a>미구현</a>
-			<a>미구현</a>
-			<a>미구현</a>
-			<a>미구현</a>
-			<a>미구현</a>
+			<a>유저관리</a> <a>미구현</a> <a>미구현</a> <a>미구현</a> <a>미구현</a> <a>미구현</a> <a>미구현</a>
 		</div>
 
 		<!-- 설정 스크린 -->
 		<div id="cont" style="width: 830px; margin-left: 30px; margin-right: 30px;">
-			<h3>유저목록</h3>
+			<h3>
+				유저목록::
+				<span style="font-size: 14px; color: navy;">유저아이디 클릭시 상세보기</span>
+			</h3>
 			<div>
 				<input>
 				<select>
@@ -94,7 +101,7 @@ td {
 				</select>
 				<input type="button" value="검색">
 			</div>
-			<table >
+			<table>
 				<tr>
 					<th></th>
 					<th>가입일자</th>
@@ -103,7 +110,6 @@ td {
 					<th>연락처</th>
 					<th>등급</th>
 					<th>상태</th>
-					<th>수정/삭제</th>
 				</tr>
 
 				<%
@@ -114,24 +120,22 @@ td {
 				while (srs.next()) {
 				%>
 				<tr>
-					<td style="width: 30px; max-width: 30px;"><%=srs.getString("rn")%></td>
-					<td style="width: 90px; max-width: 90px;"><%=DateFormat.format(srs.getDate("user_cdate"))%></td>
-					<td style="width: 70px; max-width: 70px;"><%=srs.getString("user_id")%></td>
-					<td style="width: 70px; max-width: 70px;"><%=srs.getString("user_name")%></td>
+					<td style="width: 40px; max-width: 40px;"><%=srs.getString("rn")%></td>
+					<td style="width: 100px; max-width: 100px;"><%=DateFormat.format(srs.getDate("user_cdate"))%></td>
+					<td style="width: 80px; max-width: 80px;">
+						<div class='user' onclick="fn_userView('<%=srs.getString("user_id")%>')"><%=srs.getString("user_id")%></div>
+					</td>
+					<td style="width: 80px; max-width: 80px;"><%=srs.getString("user_name")%></td>
 					<td style="width: 100px; max-width: 100px;"><%=srs.getString("user_phone")%></td>
-					<td style="width: 30px; max-width: 30px;"><%=srs.getString("user_level")%></td>
-					<td style="width: 50px; max-width: 50px;">
+					<td style="width: 40px; max-width: 40px;"><%=srs.getString("user_level")%></td>
+					<td style="width: 60px; max-width: 60px;">
 						<%
 						if (srs.getInt("failed") > 4) {
 							out.print("잠금");
 						} else {
 							out.print("활성화");
-						}
-						;
+						} ;
 						%>
-					</td>
-					<td>
-						<input type="button" value="수정/삭제">
 					</td>
 				</tr>
 				<%
@@ -146,31 +150,32 @@ td {
 					<tr>
 						<th>가입일자</th>
 						<td>
-							<input class="inputInput">
+							<input class="inputInput" id="user_cdate">
 						</td>
 					</tr>
 					<tr>
 						<th>아이디</th>
 						<td>
-							<input class="inputInput">
+							<input class="inputInput" id="user_id_fake" disabled>
+							<input id="user_id" hidden='hidden'>
 						</td>
 					</tr>
 					<tr>
 						<th>이름</th>
 						<td>
-							<input class="inputInput">
+							<input class="inputInput" id="user_name">
 						</td>
 					</tr>
 					<tr>
 						<th>연락처</th>
 						<td>
-							<input class="inputInput">
+							<input class="inputInput" id="user_phone">
 						</td>
 					</tr>
 					<tr>
 						<th>등급</th>
 						<td>
-							<input class="inputInput" style="width:30px; float:left; padding:1px 5px; text-align: center;">
+							<input class="inputInput" id="user_level">
 						</td>
 					</tr>
 				</table>
@@ -186,3 +191,26 @@ td {
 	%>
 </body>
 </html>
+<script>
+    function fn_userView(user_id) {
+        console.log(user_id);
+        $(function () {
+            //ajax 실행            
+            $.ajax({
+                type : 'POST',
+                url : 'ajax.jsp',
+                data : {
+                    user_id : user_id,                   
+                    type : 'admin_userView'
+                },
+                success : function (user_cdate,user_id,user_name,user_phone,user_level) {
+                    alert(user_cdate+user_id+user_name+user_phone+user_level);
+                },
+                error : function (error) {
+                    console.error('에러 발생:', error);
+                }
+            });
+        });
+
+    }
+</script>

@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
@@ -98,6 +99,8 @@ else if (type.equals("registC")) {
 	String cus_no = request.getParameter("cus_no");
 	String cus_phone = request.getParameter("cus_phone");
 	cus_phone = cus_phone.substring(0, 3) + "-" + cus_phone.substring(3, 7) + "-" + cus_phone.substring(7);
+	
+	/* 신규고객등록시 */
 	if ("0".equals(cus_no)) {
 		 sql = "INSERT INTO djl_cus_info " +
 				  "(CUS_NO, CUS_NAME, CUS_BIRTH, CUS_ADDR1, CUS_ADDR2, CUS_PHONE, CUS_GENDER, CUS_CDATE, DELETEYN) "+
@@ -121,9 +124,13 @@ else if (type.equals("registC")) {
 		ResultSet srs = stmt.executeQuery(sql);
 		srs.next();
 		cus_no = srs.getString("cus_no"); 
-	} else {
+	} 
+	/* 기고객등록시 */
+	else {
 		cus_no = request.getParameter("cus_no");
 	}
+	
+	/* cus_no로 djl_sell 테이블에 레코드 생성 */
 	 String sellSql = "INSERT INTO DJL_SELL " + "VALUES (" + cus_no + ",'" + request.getParameter("sales_name") + "','"
 	+ request.getParameter("product_no") + "','" + request.getParameter("product_pkno") + "','"
 	+ request.getParameter("product_color") + "','" + request.getParameter("product_price") + "',TO_DATE('"
@@ -166,6 +173,18 @@ else if (type.equals("registCmt")) {
 	+ request.getParameter("cmt") + "',sysdate,'" + request.getParameter("user_id") + "','N')";
 	stmt.executeUpdate(sql);
 	out.print("success");
+	return;
+}
+
+else if(type.equals("admin_userView")){
+	sql="select * from djl_user_info where user_id='"+request.getParameter("user_id")+"'";
+	ResultSet srs=stmt.executeQuery(sql);
+	srs.next();
+	out.print(srs.getDate("user_cdate"));
+	out.print(srs.getDate("user_id"));
+	out.print(srs.getString("user_name"));
+	out.print(srs.getString("user_phone"));
+	out.print(srs.getString("user_level"));
 	return;
 }
 %>
