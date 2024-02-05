@@ -99,48 +99,40 @@ else if (type.equals("registC")) {
 	String cus_no = request.getParameter("cus_no");
 	String cus_phone = request.getParameter("cus_phone");
 	cus_phone = cus_phone.substring(0, 3) + "-" + cus_phone.substring(3, 7) + "-" + cus_phone.substring(7);
-	
+
 	/* 신규고객등록시 */
 	if ("0".equals(cus_no)) {
-		 sql = "INSERT INTO djl_cus_info " +
-				  "(CUS_NO, CUS_NAME, CUS_BIRTH, CUS_ADDR1, CUS_ADDR2, CUS_PHONE, CUS_GENDER, CUS_CDATE, DELETEYN) "+
-				  "VALUES "+
-				    "(DJL_CUS_NO_SEQ.NEXTVAL,"+
-				     "'"+request.getParameter("cus_name2")+"',"+
-				     "TO_DATE('"+request.getParameter("cus_birth2")+"', 'YYYYMMDD'),"+
-				     "'"+request.getParameter("cus_addr1")+"',"+
-				     "'"+request.getParameter("cus_addr2")+"',"+
-				     "'"+cus_phone+"',"+
-				     "'"+request.getParameter("cus_gender2")+"',"+
-				     "SYSDATE,"+
-				     "'N')";
-		stmt.executeUpdate(sql); 
-		
-		
-		
+		sql = "INSERT INTO djl_cus_info "
+		+ "(CUS_NO, CUS_NAME, CUS_BIRTH, CUS_ADDR1, CUS_ADDR2, CUS_PHONE, CUS_GENDER, CUS_CDATE, DELETEYN) "
+		+ "VALUES " + "(DJL_CUS_NO_SEQ.NEXTVAL," + "'" + request.getParameter("cus_name2") + "'," + "TO_DATE('"
+		+ request.getParameter("cus_birth2") + "', 'YYYYMMDD')," + "'" + request.getParameter("cus_addr1")
+		+ "'," + "'" + request.getParameter("cus_addr2") + "'," + "'" + cus_phone + "'," + "'"
+		+ request.getParameter("cus_gender2") + "'," + "SYSDATE," + "'N')";
+		stmt.executeUpdate(sql);
+
 		/* 고객NO SELECT -> SELL 레코드 추가 (cus_cdate 내림차순으로 가장 최근 등록된 고객으로 조회) */
-		 sql = "select * from djl_cus_info where cus_name='" + request.getParameter("cus_name2") + "' and cus_birth='"
+		sql = "select * from djl_cus_info where cus_name='" + request.getParameter("cus_name2") + "' and cus_birth='"
 		+ request.getParameter("cus_birth2") + "' order by cus_cdate desc";
 		ResultSet srs = stmt.executeQuery(sql);
 		srs.next();
-		cus_no = srs.getString("cus_no"); 
-	} 
+		cus_no = srs.getString("cus_no");
+	}
 	/* 기고객등록시 */
 	else {
 		cus_no = request.getParameter("cus_no");
 	}
-	
+
 	/* cus_no로 djl_sell 테이블에 레코드 생성 */
-	 String sellSql = "INSERT INTO DJL_SELL " + "VALUES (" + cus_no + ",'" + request.getParameter("sales_name") + "','"
+	String sellSql = "INSERT INTO DJL_SELL " + "VALUES (" + cus_no + ",'" + request.getParameter("sales_name") + "','"
 	+ request.getParameter("product_no") + "','" + request.getParameter("product_pkno") + "','"
 	+ request.getParameter("product_color") + "','" + request.getParameter("product_price") + "',TO_DATE('"
 	+ request.getParameter("sell_date") + "','YYYYMMDD'),'" + request.getParameter("status") + "','"
 	+ request.getParameter("telecom") + "','" + request.getParameter("mobileplan") + "','"
 	+ request.getParameter("telfund") + "','" + request.getParameter("fund") + "','"
 	+ request.getParameter("contract") + "',djl_sell_no_seq.nextval)";
-	stmt.executeUpdate(sellSql); 
+	stmt.executeUpdate(sellSql);
 	conn.close();
-	 out.print("success"); 
+	out.print("success");
 
 	return;
 }
@@ -176,15 +168,23 @@ else if (type.equals("registCmt")) {
 	return;
 }
 
-else if(type.equals("admin_userView")){
-	sql="select * from djl_user_info where user_id='"+request.getParameter("user_id")+"'";
-	ResultSet srs=stmt.executeQuery(sql);
-	srs.next();
-	out.print(srs.getDate("user_cdate"));
-	out.print(srs.getDate("user_id"));
-	out.print(srs.getString("user_name"));
-	out.print(srs.getString("user_phone"));
-	out.print(srs.getString("user_level"));
+/* 직원 비밀번호 초기화 */
+else if (type.equals("user_resetPwd")) {
+
+	sql = "update djl_user_info set failed=0 where user_id='" + request.getParameter("user_id") + "'";
+	stmt.executeUpdate(sql);
+	out.print("success");
+	return;
+}
+
+/* 유저정보수정 */
+else if (type.equals("user_update")) {
+
+	sql = "update djl_user_info set user_name='" + request.getParameter("user_name") + "',user_phone="
+	+ request.getParameter("user_phone") + ",user_level='" + request.getParameter("user_level")
+	+ "' where user_id='" + request.getParameter("user_id") + "'";
+	stmt.executeUpdate(sql);
+	out.print("success");
 	return;
 }
 %>

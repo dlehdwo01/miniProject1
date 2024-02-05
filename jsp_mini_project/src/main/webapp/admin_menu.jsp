@@ -79,6 +79,11 @@ td {
 </style>
 </head>
 <body>
+	<%
+	if (!"null".equals(session.getAttribute("user_level")) && request.isRequestedSessionIdValid()
+			&& session.getAttribute("user_level") != null && "A".equals(session.getAttribute("user_level"))) {
+	%>
+
 	<%@ include file="db/dbconn.jsp"%>
 	<div id="section-contents" style="height: 700px;">
 		<h1>관리자메뉴</h1>
@@ -123,7 +128,7 @@ td {
 					<td style="width: 40px; max-width: 40px;"><%=srs.getString("rn")%></td>
 					<td style="width: 100px; max-width: 100px;"><%=DateFormat.format(srs.getDate("user_cdate"))%></td>
 					<td style="width: 80px; max-width: 80px;">
-						<div class='user' onclick="fn_userView('<%=srs.getString("user_id")%>')"><%=srs.getString("user_id")%></div>
+						<div class='user' onclick="fn_userView('<%=srs.getDate("user_cdate")%>','<%=srs.getString("user_id")%>','<%=srs.getString("user_name")%>','<%=srs.getString("user_phone")%>','<%=srs.getString("user_level")%>')"><%=srs.getString("user_id")%></div>
 					</td>
 					<td style="width: 80px; max-width: 80px;"><%=srs.getString("user_name")%></td>
 					<td style="width: 100px; max-width: 100px;"><%=srs.getString("user_phone")%></td>
@@ -150,7 +155,7 @@ td {
 					<tr>
 						<th>가입일자</th>
 						<td>
-							<input class="inputInput" id="user_cdate">
+							<input class="inputInput" id="user_cdate" disabled="disabled">
 						</td>
 					</tr>
 					<tr>
@@ -169,48 +174,117 @@ td {
 					<tr>
 						<th>연락처</th>
 						<td>
-							<input class="inputInput" id="user_phone">
+							<input class="inputInput" id="user_phone" maxlength="11">
 						</td>
 					</tr>
 					<tr>
 						<th>등급</th>
 						<td>
-							<input class="inputInput" id="user_level">
+							<input class="inputInput" style=" width:50px; float: left;" id="user_level">
+							<input class="inputInput" id="user_level_kor" style="width:80px; float: left;">
 						</td>
 					</tr>
 				</table>
 			</div>
-			<input type="button" value="회원수정">
-			<input type="button" value="회원삭제">
+			<div style="margin-top: 15px; text-align: center" hidden='hidden' id="selectBtn">
+				<input type="button" value="비밀번호초기화" onclick="fn_user('user_resetPwd')">
+				<input type="button" value="회원수정" onclick="fn_user('user_update')">
+				<input type="button" value="회원삭제" onclick="fn_user('user_delete')">
+			</div>
 		</div>
 
 	</div>
 	<!-- section contents -->
 	<%
 	conn.close();
+	} else {
+	%>
+	<script>
+        alert("관리자 권한만 접속 가능합니다.");
+        location.href="main.jsp?section=customer_list"
+    </script>
+	<%
+	}
 	%>
 </body>
 </html>
 <script>
-    function fn_userView(user_id) {
-        console.log(user_id);
+    /*    var kor = /^[ㄱ-ㅎㅏ-ㅣ가-힣]+$/;
+       var koreng = /^[가-힣a-zA-Z]+$/;
+       var number = /^[0-9]+$/;
+       if(registC.check.value=="no"){
+           alert("고객조회를 먼저 해주세요.")
+           return;
+       } else if (registC.cus_phone.value == "") {
+           alert("휴대폰번호를 입력해주세요");
+           return;
+       } else if (!number.test(registC.cus_phone.value)
+               || registC.cus_phone.value.length != 11) {
+           alert("휴대폰번호를 제대로 입력해주세요");
+           return;
+       } */
+
+    function fn_userView(user_cdate, user_id, user_name, user_phone, user_level) {
+        var level = "";
+        if ("A" == user_level) {
+            level = "관리자";
+        } else if ('U' == user_level) {
+            level = "일반";
+        }
+        $(function () {
+            $("#selectBtn").show();
+            $("#user_cdate").val(user_cdate);
+            $("#user_id_fake").val(user_id);
+            $("#user_id").val(user_id);
+            $("#user_name").val(user_name);
+            $("#user_phone").val(user_phone);
+            $("#user_level").val(user_level);
+            $("#user_level_kor").val(level);
+        })
+    }
+
+    function fn_user(setType) {
         $(function () {
             //ajax 실행            
             $.ajax({
                 type : 'POST',
                 url : 'ajax.jsp',
                 data : {
-                    user_id : user_id,                   
-                    type : 'admin_userView'
+                    user_id : $("#user_id").val(),
+                    user_name : $("#user_name").val(),
+                    user_phone : $("#user_phone").val(),
+                    user_level : $("#user_level").val(),
+                    type : setType
                 },
-                success : function (user_cdate,user_id,user_name,user_phone,user_level) {
-                    alert(user_cdate+user_id+user_name+user_phone+user_level);
+                success : function (response) {
+                    
+                    /* 비밀번호초기화시 */
+                    if (setType == "user_resetPwd") {
+                        if (response.trim() === "success") {
+                            alert("비밀번호 초기화 완료")
+                            location.reload();
+                        } else {
+                            alert("문제가 계속된다면 관리자에게 문의하세요.");
+                        }
+                    } 
+                    /* 유저정보수정시 */
+                    else if(setType == "user_update"){
+                        if (response.trim() === "success") {
+                            alert("비밀번호 초기화 완료")
+                            location.reload();
+                        } else {
+                            alert("문제가 계속된다면 관리자에게 문의하세요.");
+                        }
+                        
+                    }
+
                 },
                 error : function (error) {
                     console.error('에러 발생:', error);
                 }
             });
-        });
+
+        })
 
     }
 </script>

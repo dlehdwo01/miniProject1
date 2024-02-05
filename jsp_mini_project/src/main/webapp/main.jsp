@@ -23,8 +23,6 @@ td {
 	<%
 	if (!"null".equals(session.getAttribute("user_id")) && request.isRequestedSessionIdValid()
 			&& session.getAttribute("user_id") != null) {
-		/* !"null".equals(session.getAttribute("user_id")) && request.isRequestedSessionIdValid()
-		&& session.getAttribute("user_id") != null */
 	%>
 
 
