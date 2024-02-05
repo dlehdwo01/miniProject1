@@ -8,7 +8,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-
 .inputBOX {
 	width: 250px;
 	position: relative;
@@ -77,6 +76,7 @@ th {
 table {
 	margin: 0px auto;
 }
+
 .button {
 	margin: 10px;
 	margin-top: 20px;
@@ -86,12 +86,14 @@ table {
 	background-color: rgba(0, 0, 0, 0.025);
 	cursor: pointer;
 	padding: 10px 15px;
-	border:1px solid #ccc;
+	border: 1px solid #ccc;
 }
 
-.cmtTxt{
-border-bottom: 1px solid #ccc;
-margin-top: 10px;
+.cmtTxt {
+	border-bottom: 1px solid #ccc;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	padding-bottom: 5px;
 }
 </style>
 </head>
@@ -99,7 +101,9 @@ margin-top: 10px;
 	<%@ include file="db/dbconn.jsp"%>
 	<%
 	SimpleDateFormat DateFormat = new SimpleDateFormat("yyyyMMdd");
+	SimpleDateFormat CMTDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	String cus_no = request.getParameter("cus_no");
+	
 	String sql = "select * from djl_cus_info c left join djl_sell s on c.cus_no = s.cus_no where deleteyn='N' and c.cus_no="
 			+ cus_no;
 	ResultSet srs = stmt.executeQuery(sql);
@@ -112,7 +116,7 @@ margin-top: 10px;
         location.href = "main.jsp?section=customer_list";
     </script>
 	<%
-	}
+	} else {
 	%>
 
 
@@ -123,6 +127,8 @@ margin-top: 10px;
 			<div style="border: 1px solid #ccc; height: 600px; padding: 20px; background-color: white; border-radius: 10px; padding-top: 0px;">
 				<div style="width: 350px; margin-rigth: 30px; float: left">
 					<h4>고객정보</h4>
+					<input name="cus_no" id="cus_no" value="<%=cus_no%>" hidden="hidden">
+					<input name="user_id" id="user_id" value="<%=session.getAttribute("user_id")%>" hidden="hidden">
 				</div>
 				<div style="width: 700px; margin-rigth: 30px; float: left">
 					<h4>
@@ -131,7 +137,7 @@ margin-top: 10px;
 					</h4>
 				</div>
 				<div style="width: 70px; margin-rigth: 30px; float: left">
-					<h4>기타</h4>
+					<h4>히스토리</h4>
 				</div>
 
 				<div id="container1" style="height: 410px; width: 250px; margin: 0px; position: static; padding: 30px; background-color: white; text-align: left; clear: both; float: left; margin-right: 30px;">
@@ -150,29 +156,21 @@ margin-top: 10px;
 					<div class="inputBOX">
 						<div class="inputInput" style="color: dimgrey; font-size: 12px; line-height: 15px; padding-top: 15px; height: 30px;">
 							<span style="font-size: 15px; position: absolute; bottom: 37px; background-color: white"> 성별</span>
-							<%
-							if ("M".equals(srs.getString("cus_gender").trim())) {
-							%>
-							<input type="radio" name="cus_gender" value="M" checked>
-							남자
-							<input type="radio" name="cus_gender" value="F">
-							여자
-							<%
-							} else {
-							%>
-							<input type="radio" name="cus_gender" value="M">
-							남자
-							<input type="radio" name="cus_gender" value="F" checked>
-							여자
-							<%
-							}
-							%>
+							<label>
+								<input type="radio" name="cus_gender" value="M" <%if("M".equals(srs.getString("cus_gender").trim())) out.print("checked"); %>>
+								남자
+							</label>
+							<label>
+								<input type="radio" name="cus_gender" value="F" <%if("F".equals(srs.getString("cus_gender").trim())) out.print("checked"); %>>
+								여자		
+							</label>			
+							
 						</div>
 					</div>
 					<div class="inputBOX">
 						<label>
 							<span class="explainInput"> 휴대폰번호(-제외)</span>
-							<input class="inputInput" name="cus_phone" id="cus_phone" maxlength="11" value="<%=srs.getString("cus_phone")%>">
+							<input class="inputInput" name="cus_phone" id="cus_phone" maxlength="11" value="<%=srs.getString("cus_phone").replace("-", "")%>">
 						</label>
 					</div>
 					<div class="inputBOX">
@@ -215,7 +213,7 @@ margin-top: 10px;
 							<th>판매자</th>
 						</tr>
 						<%
-						srs = stmt.executeQuery(sql);
+						srs = stmt.executeQuery(sql);						
 						while (srs.next()) {
 						%>
 						<tr>
@@ -243,42 +241,69 @@ margin-top: 10px;
 					<%
 					} else {
 					%>
-					<div style="text-align: center;margin-top:200px; font-size: 20px;">
-						아무것도 없어요😂
-						<%
+					<div style="text-align: center; margin-top: 200px; font-size: 20px;">아무것도 없어요😂</div>
+					<%
 					}
+					
 					%>
-					</div>
+
 				</div>
 				<!-- 코멘트이력 -->
-				<div id="container1" style="height: 450px; width: 620px; position: relative; margin: 0px; position: relative; padding: 10px; background-color: white; text-align: left; float: left; ">
-					<div class="comment ">
-					<div class="cmtTxt">asdfaf</div>
-					<div class="cmtTxt">asdfaf</div>
-					<div class="cmtTxt">asdfaf</div>
+				<div id="container1" class="reloadDIV" style="height: 450px; width: 620px; position: relative; margin: 0px; position: relative; padding: 10px; background-color: white; text-align: left; float: left;">
+					<div class="comment" id="comment">
+						<%
+						String cmtSql = "select * from djl_cus_comment where deleteyn='N' and cus_no=" + request.getParameter("cus_no") + " order by cdate desc";
+						ResultSet cmtSrs = stmt.executeQuery(cmtSql);
+
+						if (cmtSrs.next()) {
+							cmtSrs = stmt.executeQuery(cmtSql);
+							while (cmtSrs.next()) {
+							%>
+							<div><%=cmtSrs.getString("user_id")%>	|	<%=CMTDateFormat.format(cmtSrs.getDate("cdate"))%></div>
+							<div class="cmtTxt"><%=cmtSrs.getString("cmt")%></div>
+							<%
+							}
+						} else {
+							%>
+							<div style="text-align: center; margin-top: 200px; font-size: 20px;">아무것도 없어요😂</div>
+							<%
+							}
+							%>
 					</div>
 					<div>
 						<textarea class="commentTxt" name="cmt"></textarea>
-						<input value="등록" type="button" class="commentRegist">
+						<input value="등록" type="button" class="commentRegist" onclick='fn_cmt()'>
 					</div>
 				</div>
 				<div style="text-align: center;">
 					<input name="type" value="registC" hidden="hidden">
-					<input type="button" value="수정" class="button" onclick="fn_button('submit')">
+					<input type="button" value="정보수정" class="button" onclick='fn_button("update")'>
+					<input type="button" value="고객삭제" class="button" onclick="fn_button('delete')">
 					<input type="button" value="목록으로" class="button" onclick="history.back()">
 				</div>
 			</div>
 		</div>
+
 	</form>
 	<%
+	}
+
 	conn.close();
 	%>
 </body>
 
 </html>
 <script>
+
+var viewC = document.viewCustomer;
+/*     $(function () {
+        $("#viewCustomer input[name='cus_gender']").on("click", function () {
+            alert($("#viewCustomer input[name='cus_gender']:checked").val());
+        })
+    }) */
+
     /* 조건식 */
-    var registC = document.registCustomer;
+
     var kor = /^[ㄱ-ㅎㅏ-ㅣ가-힣]+$/;
     var koreng = /^[가-힣a-zA-Z]+$/;
     var number = /^[0-9]+$/;
@@ -292,59 +317,86 @@ margin-top: 10px;
         });
 
     });
-
+   
     /* 버튼 클릭시 */
     function fn_button(type) {
-        if (type == "cancel") {
-            if (confirm("작성중인 내용이 모두 사라집니다. 계속 하시겠습니까?")) {
-                location.href = "main.jsp?section=customer_list";
-            }
-        } else if (type == "submit") {
-            if (registC.cus_name.value == "") {
-                alert("고객명을 입력해주세요");
-                return;
-            } else if (!koreng.test(registC.cus_name.value)) {
-                alert("고객명을 제대로 입력해주세요");
-                return;
-            } else if (registC.cus_birth.value == "") {
-                alert("생년월일을 입력해주세요");
-                return;
-            } else if (!number.test(registC.cus_birth.value)
-                    || registC.cus_birth.value.length != 8) {
-                alert("생년월일을 제대로 입력해주세요");
-                return;
-            } else if (registC.cus_phone.value == "") {
-                alert("휴대폰번호를 입력해주세요");
-                return;
-            } else if (!number.test(registC.cus_phone.value)
-                    || registC.cus_phone.value.length != 11) {
-                alert("휴대폰번호를 제대로 입력해주세요");
-                return;
-            }
-            $(function () {
-                var allInputData = $("#registCustomer").serialize();
+        /* 고객삭제 */
+        if (type == "delete") {
+            if (confirm("해당 고객님의 정보를 모두 삭제하시겠습니까?")) {
 
                 //ajax 실행            
                 $.ajax({
                     type : 'POST',
                     url : 'ajax.jsp',
-                    data : allInputData,
+                    data : {
+                        cus_no : $("#cus_no").val(),
+                        type : 'delete'
+                    },
                     success : function (response) {
-                        if (response == "success") {
-                            alert("등록완료");
+                        if (response.trim() === "success") {
                             location.href = "main.jsp?section=customer_list";
                         } else {
-                            alert("실패");
+                            alert("문제가 계속된다면 관리자에게 문의하세요.");
                         }
                     },
                     error : function (error) {
                         console.error('에러 발생:', error);
                     }
                 });
-            });
-
+            }
         }
 
+        /* 고객수정 */
+        else if (type == "update") {
+            if (viewC.cus_name.value == "") {
+                alert("고객명을 입력해주세요");
+                return;
+            } else if (!koreng.test(viewC.cus_name.value)) {
+                alert("고객명을 제대로 입력해주세요");
+                return;
+            } else if (viewC.cus_birth.value == "") {
+                alert("생년월일을 입력해주세요");
+                return;
+            } else if (!number.test(viewC.cus_birth.value)
+                    || viewC.cus_birth.value.length != 8) {
+                alert("생년월일을 제대로 입력해주세요");
+                return;
+            } else if (viewC.cus_phone.value == "") {
+                alert("휴대폰번호를 입력해주세요");
+                return;
+            } else if (!number.test(viewC.cus_phone.value)
+                    || viewC.cus_phone.value.length != 11) {
+                alert("휴대폰번호를 제대로 입력해주세요");
+                return;
+            } else {
+                //ajax 실행            
+                $.ajax({
+                    type : 'POST',
+                    url : 'ajax.jsp',
+                    data : {
+                        cus_no : $("#cus_no").val(),
+                        cus_name : $("#cus_name").val(),
+                        cus_birth : $("#cus_birth").val(),
+                        cus_gender : $("#viewCustomer input[name='cus_gender']:checked").val(),
+                        cus_phone : $("#cus_phone").val(),
+                        cus_addr1 : $("#cus_addr1").val(),
+                        cus_addr2 : $("#cus_addr2").val(),
+                        type : 'update'
+                    },
+                    success : function (response) {
+                        if (response.trim() === "success") {
+                            alert("수정완료");
+                            location.reload();
+                        } else {
+                            alert("문제가 계속된다면 관리자에게 문의하세요.");
+                        }
+                    },
+                    error : function (error) {
+                        console.error('에러 발생:', error);
+                    }
+                });
+            }
+        }
     }
 
     $(function () {
@@ -381,4 +433,35 @@ margin-top: 10px;
             }
         })
     })
+    
+        /* 코멘트 입력 */
+    function fn_cmt() {
+        var cmtValue = viewC.cmt.value;
+
+                //ajax 실행            
+                $.ajax({
+                    type : 'POST',
+                    url : 'ajax.jsp',
+                    data : {
+                        cus_no : $("#cus_no").val(),
+                        user_id : $("#user_id").val(),
+                        cmt : cmtValue,
+                        type : 'registCmt'
+                    },
+                    success : function (response) {
+                        if (response.trim() === "success") {
+                            alert("코멘트 등록 완료");
+                            $(".reloadDIV").load(location.href+ " #comment");
+                        } else {
+                            alert("문제가 계속된다면 관리자에게 문의하세요.");
+                        }
+                    },
+                    error : function (error) {
+                        console.error('에러 발생:', error);
+                    }
+                });
+            }
+        
+
+    
 </script>

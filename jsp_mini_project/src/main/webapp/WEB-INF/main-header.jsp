@@ -47,7 +47,7 @@ td {
 				<span class="menu">관리자메뉴</span>
 			</div>
 			<div id="section">
-				<%@ include file="customer_list.jsp"%>
+				
 			</div>
 			<!-- section -->
 		</div>
