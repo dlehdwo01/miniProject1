@@ -168,7 +168,7 @@ else if (type.equals("registCmt")) {
 	return;
 }
 
-/* 직원 비밀번호 초기화 */
+/* 직원(유저) 비밀번호 초기화 */
 else if (type.equals("user_resetPwd")) {
 
 	sql = "update djl_user_info set failed=0 where user_id='" + request.getParameter("user_id") + "'";
@@ -177,12 +177,20 @@ else if (type.equals("user_resetPwd")) {
 	return;
 }
 
-/* 유저정보수정 */
+/* 직원(유저) 정보수정 */
 else if (type.equals("user_update")) {
 
-	sql = "update djl_user_info set user_name='" + request.getParameter("user_name") + "',user_phone="
-	+ request.getParameter("user_phone") + ",user_level='" + request.getParameter("user_level")
+	sql = "update djl_user_info set user_name='" + request.getParameter("user_name") + "',user_phone='"
+	+ request.getParameter("user_phone") + "',user_level='" + request.getParameter("user_level")
 	+ "' where user_id='" + request.getParameter("user_id") + "'";
+	stmt.executeUpdate(sql);
+	out.print("success");
+	return;
+}
+
+/* 직원(유저) 정보삭제 */
+else if (type.equals("user_delete")) {
+	sql = "delete from djl_user_info where user_id='" + request.getParameter("user_id") + "'";
 	stmt.executeUpdate(sql);
 	out.print("success");
 	return;

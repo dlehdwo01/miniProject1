@@ -134,7 +134,7 @@ table {
 				<div style="width: 700px; margin-rigth: 30px; float: left">
 					<h4>
 						판매이력::
-						<span style="font-size: 12px; color: navy;">판매일자 클릭 상세보기</span>
+						<span style="font-size: 12px; color: navy;">판매일자 클릭 상세보기(미구현)</span>
 					</h4>
 				</div>
 				<div style="width: 70px; margin-rigth: 30px; float: left">
@@ -218,7 +218,7 @@ table {
 						while (srs.next()) {
 						%>
 						<tr>
-							<td style="max-width: 80px; width: 80px;"><%=DateFormat.format(srs.getDate("sell_date"))%>
+							<td style="max-width: 80px; width: 80px;"><%=srs.getDate("sell_date")%>
 							</td>
 							<td style="max-width: 50px; width: 50px;"><%=srs.getString("product_no")%>
 							</td>
@@ -266,7 +266,7 @@ table {
 							}
 						} else {
 							%>
-							<div style="text-align: center; margin-top: 200px; font-size: 20px;">아무것도 없어요😂</div>
+							<div style="text-align: center; margin-top: 150px; font-size: 20px;">아무것도 없어요😂</div>
 							<%
 							}
 							%>

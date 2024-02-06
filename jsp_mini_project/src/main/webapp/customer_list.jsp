@@ -242,9 +242,10 @@ a {
             if (event.which === 13) {
                 fn_searchBtn();
             }
-        });
-
+        });		
     });
+    
+    /* 검색 */
     function fn_searchBtn() {
         var keyword = document.querySelector("#keyword").value;
         if(keyword==""){
