@@ -28,17 +28,18 @@
 		<div style="margin-bottom: 30px;">
 			<h3>로그인</h3>
 		</div>
-		<div style="margin-bottom: 40px;">비밀번호를 입력해주세요.</div>
+		<div style="margin-bottom: 40px;">비밀번호를 입력해주세요.</div>		
 
 		<form name="login" onsubmit="return false">
 			<div style="position: relative;">
 				<label>
-					<span class="explainInput"> 비밀번호</span>
-					<input name="user_id" id="user_id" hidden value="<%=request.getParameter("user_id")%>">
+					<span class="explainInput">비밀번호</span>
+					<input name="user_id" id="user_id" hidden='hidden' value="<%=request.getParameter("user_id")%>">
 					<input class="inputInput" name="user_pwd" id="user_pwd" type="password" autofocus>
 				</label>
 			</div>
 			<div style="color: red; margin-top: 10px;" class='noId'></div>
+			<span style="color: red; margin-top: 10px; position: absolute; left:100px; top:325px;display:inline;">비밀번호 초기화시 12341234</span>
 			<div class="join-next">
 				<input class="next buttonbox" type="button" value="다음" onclick="fn_login()">
 			</div>

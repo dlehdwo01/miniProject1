@@ -126,6 +126,3 @@ td {
 	%>
 </body>
 </html>
-<script>
-    
-</script>

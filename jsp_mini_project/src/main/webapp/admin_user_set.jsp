@@ -240,7 +240,7 @@ td {
 						<div style="font-size: 11px;">A:관리자 U:일반</div>
 					</th>
 					<td>
-						<input class="inputInput" style="width: 50px; float: left; border: 1px solid green;" id="user_level">
+						<input class="inputInput" style="width: 50px; float: left; border: 1px solid green;" id="user_level" maxlength="1">
 						<input class="inputInput" id="user_level_kor" style="width: 80px; float: left;" disabled="disabled">
 					</td>
 				</tr>

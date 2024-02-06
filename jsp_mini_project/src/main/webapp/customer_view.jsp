@@ -104,7 +104,7 @@ table {
 	SimpleDateFormat DateFormat = new SimpleDateFormat("yyyyMMdd");
 	SimpleDateFormat CMTDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	String cus_no = request.getParameter("cus_no");
-	
+
 	String sql = "select * from djl_cus_info c left join djl_sell s on c.cus_no = s.cus_no where selldeleteyn='N' and c.cus_no="
 			+ cus_no;
 	ResultSet srs = stmt.executeQuery(sql);
@@ -158,14 +158,16 @@ table {
 						<div class="inputInput" style="color: dimgrey; font-size: 12px; line-height: 15px; padding-top: 15px; height: 30px;">
 							<span style="font-size: 15px; position: absolute; bottom: 37px; background-color: white"> 성별</span>
 							<label>
-								<input type="radio" name="cus_gender" value="M" <%if("M".equals(srs.getString("cus_gender").trim())) out.print("checked"); %>>
+								<input type="radio" name="cus_gender" value="M" <%if ("M".equals(srs.getString("cus_gender").trim()))
+	out.print("checked");%>>
 								남자
 							</label>
 							<label>
-								<input type="radio" name="cus_gender" value="F" <%if("F".equals(srs.getString("cus_gender").trim())) out.print("checked"); %>>
-								여자		
-							</label>			
-							
+								<input type="radio" name="cus_gender" value="F" <%if ("F".equals(srs.getString("cus_gender").trim()))
+	out.print("checked");%>>
+								여자
+							</label>
+
 						</div>
 					</div>
 					<div class="inputBOX">
@@ -198,7 +200,7 @@ table {
 				srs.next();
 				%>
 				<!-- 판매이력 -->
-				<div id="container1" style="height: 450px; width: 632px; margin: 0px; position: static; padding: 10px; background-color: white; text-align: center; float: left; margin-right: 30px; overflow: scroll;">
+				<div id="container1" style="height: 450px; width: 632px; margin: 0px; position: static; padding: 10px; background-color: white; text-align: center; float: left; margin-right: 30px; overflow-y: scroll;">
 					<%
 					if (srs.getString("sell_no") != null) {
 					%>
@@ -214,7 +216,7 @@ table {
 							<th>판매자</th>
 						</tr>
 						<%
-						srs = stmt.executeQuery(sql);						
+						srs = stmt.executeQuery(sql);
 						while (srs.next()) {
 						%>
 						<tr>
@@ -245,7 +247,6 @@ table {
 					<div style="text-align: center; margin-top: 200px; font-size: 20px;">아무것도 없어요😂</div>
 					<%
 					}
-					
 					%>
 
 				</div>
@@ -253,23 +254,43 @@ table {
 				<div id="container1" class="reloadDIV" style="height: 450px; width: 620px; position: relative; margin: 0px; position: relative; padding: 10px; background-color: white; text-align: left; float: left;">
 					<div class="comment" id="comment">
 						<%
-						String cmtSql = "select * from djl_cus_comment where deleteyn='N' and cus_no=" + request.getParameter("cus_no") + " order by cdate desc";
+						String cmtSql = "select * from djl_cus_comment where deleteyn='N' and cus_no=" + request.getParameter("cus_no")
+								+ " order by cdate desc";
 						ResultSet cmtSrs = stmt.executeQuery(cmtSql);
 
 						if (cmtSrs.next()) {
 							cmtSrs = stmt.executeQuery(cmtSql);
 							while (cmtSrs.next()) {
+						%>
+						<div style="padding: 5px;"><%=cmtSrs.getString("user_id")%>
+							|
+							<%=cmtSrs.getDate("cdate")%> <%=cmtSrs.getTime("cdate")%>
+							
+							<!-- 본인이 작성한 코멘트, 관리자 등급만 수정,삭제 추가 -->
+							<%
+							if (session.getAttribute("user_id").equals(cmtSrs.getString("user_id"))
+									|| session.getAttribute("user_level").equals("A")) {
 							%>
-							<div style="padding:5px;"><%=cmtSrs.getString("user_id")%>	|	<%=CMTDateFormat.format(cmtSrs.getDate("cdate"))%></div>
-							<div class="cmtTxt"><%=cmtSrs.getString("cmt")%></div>
+							<span style="float: right;">
+								<input type="button" style="float: right; margin-left: 5px;" value="삭제" onclick='fn_cmtDelete("<%=cmtSrs.getString("cmt_no")%>")'>
+								<input type="button" style="float: right;" value="수정" onclick='fn_cmtUpdate("<%=cmtSrs.getString("cmt_no")%>")'>
+							</span>
 							<%
 							}
+							%>
+							<!--  -->
+							
+						</div>
+
+						<div class="cmtTxt"><%=cmtSrs.getString("cmt")%></div>
+						<%
+						}
 						} else {
-							%>
-							<div style="text-align: center; margin-top: 150px; font-size: 20px;">아무것도 없어요😂</div>
-							<%
-							}
-							%>
+						%>
+						<div style="text-align: center; margin-top: 150px; font-size: 20px;">아무것도 없어요😂</div>
+						<%
+						}
+						%>
 					</div>
 					<div>
 						<textarea class="commentTxt" name="cmt"></textarea>
@@ -295,20 +316,19 @@ table {
 
 </html>
 <script>
-
-var viewC = document.viewCustomer;
-/*     $(function () {
-        $("#viewCustomer input[name='cus_gender']").on("click", function () {
-            alert($("#viewCustomer input[name='cus_gender']:checked").val());
-        })
-    }) */
-
+    var viewC = document.viewCustomer;
+    
+    
     /* 조건식 */
-
     var kor = /^[ㄱ-ㅎㅏ-ㅣ가-힣]+$/;
     var koreng = /^[가-힣a-zA-Z]+$/;
     var number = /^[0-9]+$/;
 
+    function fn_setCmt(type){
+        console.log(type);
+    }
+    
+    
     // Enter 키 이벤트 처리
     $(function () {
         $('.inputInput').on('keypress', function (event) {
@@ -316,9 +336,8 @@ var viewC = document.viewCustomer;
                 fn_button('submit');
             }
         });
-
     });
-   
+
     /* 버튼 클릭시 */
     function fn_button(type) {
         /* 고객삭제 */
@@ -371,31 +390,34 @@ var viewC = document.viewCustomer;
                 return;
             } else {
                 //ajax 실행            
-                $.ajax({
-                    type : 'POST',
-                    url : 'ajax.jsp',
-                    data : {
-                        cus_no : $("#cus_no").val(),
-                        cus_name : $("#cus_name").val(),
-                        cus_birth : $("#cus_birth").val(),
-                        cus_gender : $("#viewCustomer input[name='cus_gender']:checked").val(),
-                        cus_phone : $("#cus_phone").val(),
-                        cus_addr1 : $("#cus_addr1").val(),
-                        cus_addr2 : $("#cus_addr2").val(),
-                        type : 'update'
-                    },
-                    success : function (response) {
-                        if (response.trim() === "success") {
-                            alert("수정완료");
-                            location.reload();
-                        } else {
-                            alert("문제가 계속된다면 관리자에게 문의하세요.");
-                        }
-                    },
-                    error : function (error) {
-                        console.error('에러 발생:', error);
-                    }
-                });
+                $
+                        .ajax({
+                            type : 'POST',
+                            url : 'ajax.jsp',
+                            data : {
+                                cus_no : $("#cus_no").val(),
+                                cus_name : $("#cus_name").val(),
+                                cus_birth : $("#cus_birth").val(),
+                                cus_gender : $(
+                                        "#viewCustomer input[name='cus_gender']:checked")
+                                        .val(),
+                                cus_phone : $("#cus_phone").val(),
+                                cus_addr1 : $("#cus_addr1").val(),
+                                cus_addr2 : $("#cus_addr2").val(),
+                                type : 'update'
+                            },
+                            success : function (response) {
+                                if (response.trim() === "success") {
+                                    alert("수정완료");
+                                    location.reload();
+                                } else {
+                                    alert("문제가 계속된다면 관리자에게 문의하세요.");
+                                }
+                            },
+                            error : function (error) {
+                                console.error('에러 발생:', error);
+                            }
+                        });
             }
         }
     }
@@ -434,35 +456,60 @@ var viewC = document.viewCustomer;
             }
         })
     })
-    
-        /* 코멘트 입력 */
+
+    /* 코멘트 입력 */
     function fn_cmt() {
         var cmtValue = viewC.cmt.value;
 
-                //ajax 실행            
-                $.ajax({
-                    type : 'POST',
-                    url : 'ajax.jsp',
-                    data : {
-                        cus_no : $("#cus_no").val(),
-                        user_id : $("#user_id").val(),
-                        cmt : cmtValue,
-                        type : 'registCmt'
-                    },
-                    success : function (response) {
-                        if (response.trim() === "success") {
-                            alert("코멘트 등록 완료");
-                            $(".reloadDIV").load(location.href+ " #comment");
-                        } else {
-                            alert("문제가 계속된다면 관리자에게 문의하세요.");
-                        }
-                    },
-                    error : function (error) {
-                        console.error('에러 발생:', error);
-                    }
-                });
+        //ajax 실행            
+        $.ajax({
+            type : 'POST',
+            url : 'ajax.jsp',
+            data : {
+                cus_no : $("#cus_no").val(),
+                user_id : $("#user_id").val(),
+                cmt : cmtValue,
+                type : 'registCmt'
+            },
+            success : function (response) {
+                if (response.trim() === "success") {
+                    location.reload();
+                    alert("코멘트 등록 완료");
+                } else {
+                    alert("문제가 계속된다면 관리자에게 문의하세요.");
+                }
+            },
+            error : function (error) {
+                console.error('에러 발생:', error);
             }
-        
-
+        });
+    }
     
+    
+    /* 코멘트 삭제 */
+    function fn_cmtDelete(cmt_no){
+        if(confirm("해당 히스토리를 삭제하시겠습니까?")){
+            //ajax 실행            
+            $.ajax({
+                type : 'POST',
+                url : 'ajax.jsp',
+                data : {
+                    cmt_no : cmt_no,                    
+                    type : 'deleteCmt'
+                },
+                success : function (response) {
+                    if (response.trim() === "success") {
+                        location.reload();
+                        alert("코멘트 삭제 완료");
+                    } else {
+                        alert("문제가 계속된다면 관리자에게 문의하세요.");
+                    }
+                },
+                error : function (error) {
+                    console.error('에러 발생:', error);
+                }
+            });
+        }
+        
+    }
 </script>

@@ -63,7 +63,7 @@ else if (type.equals("login-pwd")) {
 	if (srs.getInt("failed") > 4) {
 		out.println("adminCall");
 	} else if (user_pwd.equals(srs.getString("user_pwd"))) {
-		out.println("success");
+
 		/* 세션부여(id,level,접속시각) */
 		HttpSession sessionStatus = request.getSession(true);
 		session.setAttribute("user_id", user_id);
@@ -72,6 +72,13 @@ else if (type.equals("login-pwd")) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String loginTime = dateFormat.format(loginDate);
 		session.setAttribute("user_loginTime", loginTime);
+
+		/* 비밀번호 초기화 */
+		String upSql = "update djl_user_info set failed=0 where user_id=?";
+		PreparedStatement pstmtUpdate = conn.prepareStatement(upSql);
+		pstmtUpdate.setString(1, user_id);
+		pstmtUpdate.executeUpdate();
+		out.println("success");
 	} else {
 		String failedSql = "update djl_user_info set failed=failed+1 where user_id='" + user_id + "'";
 		stmt.executeUpdate(failedSql);
@@ -97,7 +104,6 @@ else if (type.equals("registC")) {
 
 	/* 정보 등록 */
 	String cus_no = request.getParameter("cus_no");
-	
 
 	/* 신규고객등록시 */
 	if ("0".equals(cus_no)) {
@@ -169,10 +175,19 @@ else if (type.equals("registCmt")) {
 	return;
 }
 
+/* 코멘트삭제 */
+else if (type.equals("deleteCmt")) {
+	sql = "update djl_cus_comment set deleteyn='Y' where cmt_no=" + request.getParameter("cmt_no");
+	stmt.executeUpdate(sql);
+	out.print("success");
+	return;
+}
+
 /* 직원(유저) 비밀번호 초기화 */
 else if (type.equals("user_resetPwd")) {
 
-	sql = "update djl_user_info set failed=0 where user_id='" + request.getParameter("user_id") + "'";
+	sql = "update djl_user_info set failed=0, user_pwd='12341234' where user_id='" + request.getParameter("user_id")
+	+ "'";
 	stmt.executeUpdate(sql);
 	out.print("success");
 	return;
@@ -194,6 +209,49 @@ else if (type.equals("user_delete")) {
 	sql = "delete from djl_user_info where user_id='" + request.getParameter("user_id") + "'";
 	stmt.executeUpdate(sql);
 	out.print("success");
+	return;
+}
+
+/* 판매내역삭제 */
+else if (type.equals("del_Sell")) {
+	String[] sell_no = request.getParameterValues("sell_no");
+	sql = "update djl_sell set selldeleteyn='Y' where ";
+
+	for (int i = 0; i < sell_no.length; i++) {
+		sql += "sell_no=" + sell_no[i] + " or ";
+	}
+	sql = sql.substring(0, (sql.length() - 3));
+	stmt.executeUpdate(sql);
+	out.print("success");
+	return;
+}
+
+/* 고객완전삭제 */
+else if (type.equals("clear_cus")) {
+	String[] cus_no = request.getParameterValues("cus_no");
+	sql = "delete from djl_cus_info where ";
+
+	for (int i = 0; i < cus_no.length; i++) {
+		sql += "cus_no=" + cus_no[i] + " or ";
+	}
+	sql = sql.substring(0, (sql.length() - 3));
+	stmt.executeUpdate(sql);
+	out.print("success");
+
+	return;
+}
+/* 고객복구 */
+else if (type.equals("restore_cus")) {
+	String[] cus_no = request.getParameterValues("cus_no");
+	sql = "update djl_cus_info set deleteyn='N' where ";
+
+	for (int i = 0; i < cus_no.length; i++) {
+		sql += "cus_no=" + cus_no[i] + " or ";
+	}
+	sql = sql.substring(0, (sql.length() - 3));
+	stmt.executeUpdate(sql);
+	out.print("success");
+
 	return;
 }
 %>

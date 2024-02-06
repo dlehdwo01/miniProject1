@@ -32,7 +32,8 @@ a {
 
 table {
 	margin-top: 10px;
-	width: 750px;
+	width: 850px;
+	margin-right: 0px;
 }
 
 th {
@@ -79,7 +80,7 @@ td {
 }
 
 .pageNumber {
-	margin-top:10px;
+	margin-top: 10px;
 	font-size: 15px;
 	height: 30px;
 	cursor: pointer;
@@ -88,7 +89,7 @@ td {
 	border: none;
 	color: maroon;
 	box-sizing: border-box;
-	padding:3px;
+	padding: 3px;
 }
 </style>
 </head>
@@ -98,7 +99,7 @@ td {
 
 
 	<!-- 설정 스크린 -->
-	<div id="cont" style="width: 830px; margin-left: 30px; margin-right: 30px;">
+	<div id="cont" style="width: 850px; margin-left: 30px; margin-right: 30px; padding-right: 10px;">
 		<h3>
 			삭제고객관리::
 			<span style="font-size: 14px; color: navy;">ㅇㅇ</span>
@@ -110,15 +111,21 @@ td {
 				<option value="cus_phone">휴대폰번호</option>
 			</select>
 			<input type="button" value="검색" onclick="fn_search()">
+			<span style="float: right">
+				<input type="button" value="전체선택" onclick='fn_allSelect()'>
+				<input type="button" value="선택복구" onclick='fn_selectCus("restore_cus")'>
+				<input type="button" value="선택삭제" onclick='fn_selectCus("clear_cus")'>
+			</span>
 		</div>
 		<table>
 			<tr>
 				<th style="width: 50px; max-width: 50px;"></th>
-				<th style="width: 100px; max-width: 100px;">가입일자</th>				
+				<th style="width: 100px; max-width: 100px;">가입일자</th>
 				<th style="width: 80px; max-width: 80px;">이름</th>
 				<th style="width: 50px; max-width: 50px;">성별</th>
 				<th style="width: 80px; max-width: 80px;">생년월일</th>
-				<th style="width: 100px; max-width: 100px;">휴대폰번호</th>				
+				<th style="width: 100px; max-width: 100px;">휴대폰번호</th>
+				<th style="width: 50px; max-width: 50px;">선택</th>
 			</tr>
 
 			<%
@@ -127,20 +134,21 @@ td {
 			int showList_end = 0; //목록에 보여줄 고객번호(rownum) 끝
 			if (request.getParameter("pageNo") == null || "1".equals(request.getParameter("pageNo") == null)) {
 				thisPage = 1;
-			}else{
-				thisPage= Integer.parseInt(request.getParameter("pageNo"));
+			} else {
+				thisPage = Integer.parseInt(request.getParameter("pageNo"));
 			}
 			/* 0,1페이지 1~10 / 2페이지 11~20 */
-			
-			showList_end = thisPage * 10;
-			showList_start = showList_end-9;
 
-			String sql = "select * from (select rownum as rn, i.* from (select * from djl_cus_info where deleteyn='Y' order by cus_cdate asc) i) where rn>="+showList_start+" and rn<="+showList_end;
+			showList_end = thisPage * 10;
+			showList_start = showList_end - 9;
+
+			String sql = "select * from (select rownum as rn, i.* from (select * from djl_cus_info where deleteyn='Y' order by cus_cdate asc) i) where rn>="
+					+ showList_start + " and rn<=" + showList_end;
 			String cntSql = "select count(*) as cnt from (select rownum as rn, i.* from (select * from djl_cus_info where deleteyn='Y'  order by cus_cdate asc) i)";
-			
+
 			if (request.getParameter("keyword") != null) {
-				sql += " and "+ request.getParameter("keyword-type") + " like '%" + request.getParameter("keyword") + "%'";
-				cntSql += " where "+ request.getParameter("keyword-type") + " like '%" + request.getParameter("keyword") + "%'";
+				sql += " and " + request.getParameter("keyword-type") + " like '%" + request.getParameter("keyword") + "%'";
+				cntSql += " where " + request.getParameter("keyword-type") + " like '%" + request.getParameter("keyword") + "%'";
 			}
 
 			ResultSet srs = stmt.executeQuery(sql);
@@ -149,20 +157,30 @@ td {
 			%>
 			<tr>
 				<td style="width: 50px; max-width: 50px;"><%=srs.getString("rn")%></td>
-				<td style="width: 110px; max-width: 110px;"><%=srs.getDate("cus_cdate")%></td>				
+				<td style="width: 110px; max-width: 110px;"><%=srs.getDate("cus_cdate")%></td>
 				<td style="width: 80px; max-width: 80px;"><%=srs.getString("cus_name")%></td>
-				<td style="width: 80px; max-width: 80px;"><%if("M".equals(srs.getString("cus_gender"))){out.print("남자");}else{out.print("여자");};%></td>
+				<td style="width: 80px; max-width: 80px;">
+					<%
+					if ("M".equals(srs.getString("cus_gender"))) {
+						out.print("남자");
+					} else {
+						out.print("여자");
+					} ;
+					%>
+				</td>
 				<td style="width: 80px; max-width: 80px;"><%=srs.getDate("cus_birth")%></td>
-				<td style="width: 100px; max-width: 100px;"><%=srs.getString("cus_phone")%></td>				
-				
+				<td style="width: 100px; max-width: 100px;"><%=srs.getString("cus_phone")%></td>
+				<td style="width: 50px; max-width: 50px;">
+					<input type="checkbox" value="<%=srs.getString("cus_no")%>" name="cus_no">
+				</td>
 			</tr>
 			<%
 			}
 			%>
 		</table>
 		<div style="text-align: center">
-		<%
-			/* 최대 cnt 확인 */			
+			<%
+			/* 최대 cnt 확인 */
 			ResultSet cntResult = stmt.executeQuery(cntSql);
 
 			int maxCnt = 0;
@@ -179,69 +197,20 @@ td {
 
 			for (int i = startPage; i <= endPage; i++) {
 				if (i == thisPage) {
-					%>
-					<input type="button" value="<%=i%>" class="pageNumber" name="page" style="cursor: text; color: olive;">
-					<%
-					
-				} else {
+			%>
+			<input type="button" value="<%=i%>" class="pageNumber" name="page" style="cursor: text; color: olive;">
+			<%
+			} else {
 			%>
 			<input type="button" value="<%=i%>" class="pageNumber" name="page" onclick="movePage('<%=i%>')">
 			<%
 			}
 			}
-			 %>
-			 </div>
+			%>
+		</div>
 	</div>
 
-	<!-- 상세보기 -->
-	<!-- <div id="cont" style="width: 300px;">
-		<h3>상세보기</h3>
-		<div style="border-bottom: 1px solid #ccc; padding-bottom: 20px;">
-			<table class="detailView" style="width: 280px;">
-				<tr>
-					<th>가입일자</th>
-					<td>
-						<input class="inputInput" id="user_cdate" disabled="disabled">
-					</td>
-				</tr>
-				<tr>
-					<th>아이디</th>
-					<td>
-						<input class="inputInput" id="user_id_fake" disabled>
-						<input id="user_id" hidden='hidden'>
-					</td>
-				</tr>
-				<tr>
-					<th>이름</th>
-					<td>
-						<input class="inputInput" id="user_name" style="border: 1px solid green;">
-					</td>
-				</tr>
-				<tr>
-					<th>연락처</th>
-					<td>
-						<input class="inputInput" id="user_phone" maxlength="11" style="border: 1px solid green;">
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<div>등급</div>
-						<div style="font-size: 11px;">A:관리자 U:일반</div>
-					</th>
-					<td>
-						<input class="inputInput" style="width: 50px; float: left; border: 1px solid green;" id="user_level">
-						<input class="inputInput" id="user_level_kor" style="width: 80px; float: left;" disabled="disabled">
-					</td>
-				</tr>
-			</table>
-			
-		</div>
-		<div style="margin-top: 15px; text-align: center" hidden='hidden' id="selectBtn">
-			<input type="button" value="비밀번호초기화" onclick="fn_user('user_resetPwd')" class="resetPwd">
-			<input type="button" value="회원수정" onclick="fn_user('user_update')">
-			<input type="button" value="회원삭제" onclick="fn_user('user_delete')">
-		</div>
-	</div> -->
+
 
 
 	<%
@@ -250,15 +219,12 @@ td {
 </body>
 </html>
 <script>
-    var kor = /^[ㄱ-ㅎㅏ-ㅣ가-힣]+$/;
-    var koreng = /^[가-힣a-zA-Z]+$/;
-    var number = /^[0-9]+$/;
 
-    var level = "";
-    
-    /* 페이지 이동 */
-    function movePage(page) {
-        location.href = "main.jsp?section=admin_menu&menu=admin_user_set&pageNo=" + page;
+	/* 일괄선택 */
+    function fn_allSelect() {
+	    $(function (){
+	        $("input[type='checkbox']").prop("checked",true);
+	    })        
     }
 
     // Enter 키 이벤트 처리    
@@ -275,127 +241,57 @@ td {
         });
     });
 
+    /* 검색 */
     function fn_search() {
         $(function () {
             console.log($("#keyword-type").val());
             console.log($("#keyword").val());
-            location.href = "main.jsp?section=admin_menu&menu=admin_user_set&keyword-type="
+            location.href = "main.jsp?section=admin_menu&menu=admin_customer_set&keyword-type="
                     + $("#keyword-type").val()
                     + "&keyword="
                     + $("#keyword").val();
         });
     }
 
-    /* 등급 입력시마다 한국어 등급 변경 */
-    $(function () {
-        $("#user_level").on("propertychange change paste input", function () {
-            if ($("#user_level").val() == "A") {
-                $("#user_level_kor").val("관리자");
-            } else if ($("#user_level").val() == "U") {
-                $("#user_level_kor").val("일반");
-            } else {
-                $("#user_level_kor").val("");
-            }
+    /* 삭제 및 복구 */
+    function fn_selectCus(type) {
+        var cusNo = [];
+        var checkBoxes = document
+                .querySelectorAll('input[name="cus_no"]:checked');
+        checkBoxes.forEach(function (value, index) {
+            cusNo[index] = value.value;
         });
-    });
-
-    /* 유저아이디 클릭시 상세보기 */
-    function fn_userView(user_cdate, user_id, user_name, user_phone,user_level, failed) {
-        if ("A" == user_level) {
-            level = "관리자";
-        } else if ('U' == user_level) {
-            level = "일반";
-        }
-        $(function () {
-            $("#selectBtn").show();
-            $("#user_cdate").val(user_cdate);
-            $("#user_id_fake").val(user_id);
-            $("#user_id").val(user_id);
-            $("#user_name").val(user_name);
-            $("#user_phone").val(user_phone);
-            $("#user_level").val(user_level);
-            $("#user_level_kor").val(level);
-        })
-    }
-    /* 상세보기 내 버튼클릭시 */
-    function fn_user(setType) {
-        var user_name_val = document.querySelector("#user_name").value;
-        var user_phone_val = document.querySelector("#user_phone").value;
-        var user_level_val = document.querySelector("#user_level").value;
-
-        /* 회원 수정시 */
-        if (setType == 'user_update') {
-            if (user_name_val == "") {
-                alert("이름을 입력해주세요.");
-            } else if (/[^가-힣]/g.test(user_name_val)) {
-                alert("이름을 제대로 입력해주세요.")
-                return;
-            } else if (user_phone_val.length != 11) {
-                alert("휴대폰 번호는 -제외 11자리를 입력해주세요.");
-                return;
-            } else if (/[^0-9]/g.test(user_phone_val)) {
-                alert("휴대폰 번호를 제대로 입력해주세요.");
-                return;
-            } else if (/[^0-9]/g.test(user_phone_val)) {
-                alert("휴대폰 번호를 제대로 입력해주세요.");
-                return;
-            } else if (user_level_val != "A" && user_level_val != "U") {
-                alert("등급은 A와 U 중에서 한글자만 입력해주세요.");
-                return;
+        if (type == "clear_cus") {
+            if (confirm("선택된 고객들을 완전히 삭제하시겠습니까?")) {
+                ajax(type, cusNo);
             }
-            ajax(setType);
-        }
-        /* 비밀번호 초기화 */
-        else if (setType == 'user_resetPwd') {
-            ajax(setType);
-        }
-        /* 회원삭제 */
-        else if (setType == 'user_delete') {
-            if (confirm("정말로 해당 계정을 삭제하시겠습니까?")) {
-                ajax(setType);
+        } else if (type == "restore_cus") {
+            if (confirm("선택된 고객들을 복구시키겠습니까?")) {
+                ajax(type, cusNo);
             }
         }
     }
 
-    /* ajax */
-    function ajax(setType) {
+    function ajax(selectType, cusNo) {
+
         $(function () {
             //ajax 실행            
             $.ajax({
                 type : 'POST',
+                traditional : true,
                 url : 'ajax.jsp',
                 data : {
-                    user_id : $("#user_id").val(),
-                    user_name : $("#user_name").val(),
-                    user_phone : $("#user_phone").val(),
-                    user_level : $("#user_level").val(),
-                    type : setType
+                    cus_no : cusNo,
+                    type : selectType
                 },
                 success : function (response) {
 
-                    /* 비밀번호초기화시 */
-                    if (setType == "user_resetPwd") {
-                        if (response.trim() === "success") {
-                            alert("비밀번호 초기화 완료")
-                            location.reload();
-                        } else {
-                            alert("문제가 계속된다면 관리자에게 문의하세요.");
-                        }
-                    }
-                    /* 유저정보수정시 */
-                    else if (setType == "user_update") {
-                        if (response.trim() === "success") {
-                            alert("수정 완료")
-                            location.reload();
-                        } else {
-                            alert("문제가 계속된다면 관리자에게 문의하세요.");
-                        }
-                    } else if (setType == "user_delete") {
-                        if (response.trim() === "success") {
-                            alert("계정 삭제 완료")
-                            location.reload();
-                        } else {
-                            alert("문제가 계속된다면 관리자에게 문의하세요.");
+                    if (response.trim() == "success") {
+                        location.reload();
+                        if (selectType == "clear_cus") {
+                            alert("선택된 고객들이 완전히 삭제되었습니다.")
+                        } else if (selectType == "restore_cus") {
+                            alert("선택된 고객들이 복구되었습니다.")
                         }
                     }
                 },
