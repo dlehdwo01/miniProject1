@@ -17,5 +17,6 @@
 		</div>
 		<div style="margin-bottom: 40px;">가입하신 아이디로 다시 로그인해주세요.</div>
 		<a href="login-id.jsp" style="position: static;" class='join-button'>로그인 페이지로</a>
+	</div>
 </body>
 </html>

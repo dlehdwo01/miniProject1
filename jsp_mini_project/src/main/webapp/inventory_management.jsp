@@ -11,7 +11,7 @@
 	<%@ include file="db/dbconn.jsp"%>
 	<div id="section-contents">
 		<h1>재고관리</h1>
-		<div></div>
+		<div>공사중</div>
 	</div>
 	<!-- section contents -->
 	<%conn.close(); %>

@@ -22,7 +22,7 @@
 		<div style="margin-bottom: 40px;">아래 정보를 입력해주세요</div>
 		<form name="join">
 			<div style="position: relative; margin-top: 20px;">
-				<input name="user_id" id="user_id" hidden value="<%=request.getParameter("user_id")%>">
+				<input name="user_id" id="user_id" hidden="hidden" value="<%=request.getParameter("user_id")%>">
 				<label>
 					<span class="explainInput"> 비밀번호</span>
 					<input class="inputInput" name="user_pwd" type="password" autofocus id="user_pwd">

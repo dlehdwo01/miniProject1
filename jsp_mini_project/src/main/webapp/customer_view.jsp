@@ -123,7 +123,7 @@ table {
 
 
 	<form name="viewCustomer" id="viewCustomer">
-		<div id="section-contents" style="height: 700px;">
+		<div id="section-contents" style="height: 700px; margin-bottom:1px;">
 			<h1>고객조회</h1>
 			<div style="border: 1px solid #ccc; height: 600px; padding: 20px; background-color: white; border-radius: 10px; padding-top: 0px;">
 				<div style="width: 350px; margin-rigth: 30px; float: left">
@@ -273,7 +273,7 @@ table {
 							%>
 							<span style="float: right;">
 								<input type="button" style="float: right; margin-left: 5px;" value="삭제" onclick='fn_cmtDelete("<%=cmtSrs.getString("cmt_no")%>")'>
-								<input type="button" style="float: right;" value="수정" onclick='fn_cmtUpdate("<%=cmtSrs.getString("cmt_no")%>")'>
+								<input type="button" style="float: right;" value="수정(미구현)" onclick='fn_cmtUpdate("<%=cmtSrs.getString("cmt_no")%>")'>
 							</span>
 							<%
 							}

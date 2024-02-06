@@ -124,13 +124,13 @@ a:hover {
 	margin: 0px auto;
 }
 
-#bg {	
+#bg {
 	background-color: rgba(0, 0, 0, 0.7);
 	padding: 10px;
 	width: 100%;
 }
 
-body{	
+body {
 	margin: 0px;
 	background-color: white;
 }
@@ -176,7 +176,7 @@ body{
 	border: 1px solid #ccc;
 	background-color: rgb(240, 240, 240);
 	box-sizing: border-box;
-	padding: 20px;	
+	padding: 20px;
 }
 
 
@@ -241,4 +241,3 @@ td {
 	cursor: pointer;
 	padding: 10px 15px;
 }
-

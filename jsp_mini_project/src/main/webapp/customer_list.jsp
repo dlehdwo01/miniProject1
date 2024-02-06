@@ -229,7 +229,7 @@ a {
 
 
 	</div>
-	</div>
+	
 	<!-- section contents -->
 </body>
 </html>

@@ -17,6 +17,16 @@ td {
 	white-space: nowrap;
 	overflow: hidden
 }
+
+#bg {
+	padding: 10px;
+	height: 100%;
+}
+
+#section {
+	margin-bottom: 30px;
+	padding-bottom: 1px;
+}
 </style>
 </head>
 <body style="background-color: rgb(230, 230, 230, 0.7);">
@@ -30,6 +40,7 @@ td {
 		<div id="bg">
 			<div>
 				<div style="height: 100px;">
+					<h1 style="display: inline; color: white; cursor: pointer; position: absolute; top: 25px;" onclick="location.reload()">HELLO WORLD</h1>
 					<input type="button" value="로그아웃" class="logout-btn" onclick="fn_logout()">
 					<span id="header-status">
 						아이디:
@@ -61,42 +72,46 @@ td {
 				%>
 				<%@include file="customer_list.jsp"%>
 				<%
-				
 				} else if ("customer_regist".equals(request.getParameter("section"))) {
 				%>
 				<%@include file="customer_regist.jsp"%>
 				<%
-				
 				} else if ("customer_list".equals(request.getParameter("section"))) {
 				%>
 				<%@include file="customer_list.jsp"%>
 				<%
-				
 				} else if ("inventory_management".equals(request.getParameter("section"))) {
 				%>
 				<%@include file="inventory_management.jsp"%>
 				<%
-				
 				} else if ("admin_menu".equals(request.getParameter("section"))) {
 				%>
 				<%@include file="admin_menu.jsp"%>
 				<%
-				
 				} else if ("customer_view".equals(request.getParameter("section"))) {
 				%>
 				<%@include file="customer_view.jsp"%>
 				<%
-				
 				}
 				%>
 
 
-
 			</div>
 			<!-- section -->
+			
+			<div style="text-align: center;">
+				<div style="color: white; border-top: 2px solid white;">
+					<div style="margin-top: 20px;">
+						<span style="font-weight: bold;">Partners | </span>
+						<span>더조은아카데미</span>
+					</div>
+					<div>대한민국 인천광역시 부평구 경원대로 1366 7층</div>
+				</div>
+			</div>
 		</div>
 		<!-- bg -->
 	</div>
+
 	<!-- container -->
 	<%
 	} else {
