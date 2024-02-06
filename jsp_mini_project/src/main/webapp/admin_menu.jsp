@@ -90,7 +90,8 @@ td {
 		<!-- 메뉴 스크린 -->
 		<div id="cont">
 			<a href="main.jsp?section=admin_menu&menu=admin_user_set" style="border: 1px solid #ccc">유저관리</a>
-			
+			<a href="main.jsp?section=admin_menu&menu=admin_customer_set" style="border: 1px solid #ccc">삭제고객관리</a>
+
 		</div>
 
 		<!-- include Files(start) -->
@@ -100,6 +101,11 @@ td {
 		%>
 		<%@ include file="admin_user_set.jsp"%>
 		<%
+		}
+		else if("admin_customer_set".equals(request.getParameter("menu"))){
+			%>
+		 <%@ include file="admin_customer_set.jsp"%>
+		<%	
 		}
 		%>
 		<!-- include Files(end) -->

@@ -97,11 +97,12 @@ else if (type.equals("registC")) {
 
 	/* 정보 등록 */
 	String cus_no = request.getParameter("cus_no");
-	String cus_phone = request.getParameter("cus_phone");
-	cus_phone = cus_phone.substring(0, 3) + "-" + cus_phone.substring(3, 7) + "-" + cus_phone.substring(7);
+	
 
 	/* 신규고객등록시 */
 	if ("0".equals(cus_no)) {
+		String cus_phone = request.getParameter("cus_phone");
+		cus_phone = cus_phone.substring(0, 3) + "-" + cus_phone.substring(3, 7) + "-" + cus_phone.substring(7);
 		sql = "INSERT INTO djl_cus_info "
 		+ "(CUS_NO, CUS_NAME, CUS_BIRTH, CUS_ADDR1, CUS_ADDR2, CUS_PHONE, CUS_GENDER, CUS_CDATE, DELETEYN) "
 		+ "VALUES " + "(DJL_CUS_NO_SEQ.NEXTVAL," + "'" + request.getParameter("cus_name2") + "'," + "TO_DATE('"
@@ -129,7 +130,7 @@ else if (type.equals("registC")) {
 	+ request.getParameter("sell_date") + "','YYYYMMDD'),'" + request.getParameter("status") + "','"
 	+ request.getParameter("telecom") + "','" + request.getParameter("mobileplan") + "','"
 	+ request.getParameter("telfund") + "','" + request.getParameter("fund") + "','"
-	+ request.getParameter("contract") + "',djl_sell_no_seq.nextval)";
+	+ request.getParameter("contract") + "',djl_sell_no_seq.nextval,'N')";
 	stmt.executeUpdate(sellSql);
 	conn.close();
 	out.print("success");

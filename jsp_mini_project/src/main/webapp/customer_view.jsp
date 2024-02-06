@@ -105,7 +105,7 @@ table {
 	SimpleDateFormat CMTDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	String cus_no = request.getParameter("cus_no");
 	
-	String sql = "select * from djl_cus_info c left join djl_sell s on c.cus_no = s.cus_no where deleteyn='N' and c.cus_no="
+	String sql = "select * from djl_cus_info c left join djl_sell s on c.cus_no = s.cus_no where selldeleteyn='N' and c.cus_no="
 			+ cus_no;
 	ResultSet srs = stmt.executeQuery(sql);
 

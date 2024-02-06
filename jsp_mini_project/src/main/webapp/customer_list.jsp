@@ -46,7 +46,7 @@ a {
 					<option value="product_no">개통모델</option>
 				</select>
 				<input type="button" value="검색" class="search-btn" onclick="fn_searchBtn()">
-			</div>			
+			</div>
 		</div>
 		<table>
 			<tr style="position: relative;">
@@ -63,7 +63,7 @@ a {
 				<th>요금제</th>
 				<th>개통상태</th>
 				<th>
-					<input type="button" value="삭제" class="search-btn" style="position: absolute; bottom: 50px; right: 10px" id="cusDelete">
+					<input type="button" value="선택판매내역삭제" class="search-btn" style="position: absolute; bottom: 50px; right: 10px; width: 120px;" onclick="fn_deleteSell()">
 					선택
 				</th>
 			</tr>
@@ -80,14 +80,14 @@ a {
 			showList = thisPage * 20;
 
 			/* 검색x 고객 조회 */
-			String sql = " from (select rownum as rn, t.* from (SELECT mobileplan,c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr1,cus_addr2 ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' order by sell_date) t ) ";
+			String sql = " from (select rownum as rn, t.* from (SELECT sell_no,deleteyn,selldeleteyn,mobileplan,c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr1,cus_addr2 ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' and selldeleteyn='N' order by sell_date) t ) ";
 
 			/* 20명 조회 */
 			String rn = " where rn>" + (showList - 20) + " and rn<=" + showList;
 
 			/* 검색 고객 조회 */
 			if (request.getParameter("keyword") != null && !"".equals(request.getParameter("keyword"))) {
-				sql = " from (select rownum as rn, t.* from (SELECT mobileplan,c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr1,cus_addr2 ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' and "
+				sql = " from (select rownum as rn, t.* from (SELECT sell_no,deleteyn,selldeleteyn,mobileplan,c.cus_no as cus_no,cus_name, TO_CHAR(cus_birth,'yy/mm/dd') as cus_birth,cus_phone,cus_addr1,cus_addr2 ,product_no,product_pkno ,TO_CHAR(sell_date,'YY/MM/DD') as sell_date,SALES_NAME,STATUS,telecom FROM djl_cus_info c LEFT JOIN djl_sell s ON c.cus_no = s.cus_no where deleteyn='N' and selldeleteyn='N' and "
 				+ request.getParameter("keyword-type") + " like '%" + request.getParameter("keyword")
 				+ "%' order by sell_date) t )";
 			}
@@ -108,7 +108,7 @@ a {
 					if (srs.getString("cus_addr1") == null) {
 						out.print("");
 					} else {
-						out.print(srs.getString("cus_addr1")+" ");
+						out.print(srs.getString("cus_addr1") + " ");
 					} ;
 					if (srs.getString("cus_addr2") == null) {
 						out.print("");
@@ -181,7 +181,7 @@ a {
 					%>
 				</td>
 				<td>
-					<input type="checkbox" value="<%=srs.getString("cus_no")%>" name="cus_no[]" id="deleteCheck">
+					<input type="checkbox" value="<%=srs.getString("sell_no")%>" name="sell_no">
 				</td>
 			</tr>
 			<%
@@ -191,7 +191,7 @@ a {
 
 
 		<div style="text-align: center; height: 20px; display: flex; justify-content: center;">
-		
+
 			<%
 			/* 검색 결과를 기준으로 cnt 확인 */
 			String cntSql = "SELECT COUNT(*) as cnt " + sql;
@@ -211,11 +211,10 @@ a {
 
 			for (int i = startPage; i <= endPage; i++) {
 				if (i == thisPage) {
-					%>
-					<input type="button" value="<%=i%>" class="pageNumber" name="page" style="cursor: text; color: olive;">
-					<%
-					
-				} else {
+			%>
+			<input type="button" value="<%=i%>" class="pageNumber" name="page" style="cursor: text; color: olive;">
+			<%
+			} else {
 			%>
 			<input type="button" value="<%=i%>" class="pageNumber" name="page" onclick="movePage('<%=i%>')">
 			<%
@@ -231,6 +230,15 @@ a {
 </body>
 </html>
 <script>
+    /* 삭제 */
+    function fn_deleteSell() {
+        var checkBoxes = document.querySelectorAll('input[name="sell_no"]:checked')
+        checkBoxes.forEach(function(value){
+        
+        console.log(value);
+        })
+    }
+
     $(function () {
         // Enter 키 이벤트 처리
         $('#keyword').on('keypress', function (event) {
@@ -242,18 +250,19 @@ a {
             if (event.which === 13) {
                 fn_searchBtn();
             }
-        });		
+        });
     });
-    
+
     /* 검색 */
     function fn_searchBtn() {
         var keyword = document.querySelector("#keyword").value;
-        if(keyword==""){
+        if (keyword == "") {
             alert("최소 한 글자 이상 입력해주세요.")
-        }else{
-        var keywordType = document.querySelector("#keyword-type").value;
-        location.href = "main.jsp?section=customer_list&keyword=" + keyword
-                + "&keyword-type=" + keywordType;}
+        } else {
+            var keywordType = document.querySelector("#keyword-type").value;
+            location.href = "main.jsp?section=customer_list&keyword=" + keyword
+                    + "&keyword-type=" + keywordType;
+        }
     }
 
     function movePage(page) {

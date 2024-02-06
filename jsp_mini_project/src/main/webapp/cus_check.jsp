@@ -136,6 +136,9 @@ var excludeIds = ["cus_name", "cus_birth", "male", "female"];
         opener.document.querySelector("#cus_birth").disabled = true;
         opener.document.querySelector("#male").disabled = true;
         opener.document.querySelector("#female").disabled = true;
+        opener.document.querySelector("#cus_phone").disabled = true;
+        opener.document.querySelector("#cus_addr1").disabled = true;
+        opener.document.querySelector("#cus_addr2").disabled = true;
         opener.document.querySelector('#contract1').disabled = false;
         opener.document.querySelector('#contract2').disabled = false;
         
