@@ -371,9 +371,6 @@
             } else if (registC.product_pkno.value == "") {
                 alert("일련번호를 입력해주세요");
                 return;
-            } else if (!number.test(registC.product_pkno.value)) {
-                alert("일련번호는 숫자만 입력해주세요");
-                return;
             } else if (registC.product_color.value == "") {
                 alert("색상을 입력해주세요");
                 return;
