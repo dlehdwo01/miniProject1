@@ -21,6 +21,7 @@ td {
 #bg {
 	padding: 10px;
 	height: 100%;
+	background-color: rgba(0,0,0,0);
 }
 
 #section {
@@ -29,7 +30,7 @@ td {
 }
 </style>
 </head>
-<body style="background-color: rgb(230, 230, 230, 0.7);">
+<body>
 	<%
 	if (!"null".equals(session.getAttribute("user_id")) && request.isRequestedSessionIdValid()
 			&& session.getAttribute("user_id") != null) {
@@ -40,7 +41,7 @@ td {
 		<div id="bg">
 			<div>
 				<div style="height: 100px;">
-					<h1 style="display: inline; color: white; cursor: pointer; position: absolute; top: 25px;" onclick="location.reload()">HELLO WORLD</h1>
+					<h1 style="display: inline; color: white; position: absolute; top: 25px;">HELLO WORLD</h1>
 					<input type="button" value="로그아웃" class="logout-btn" onclick="fn_logout()">
 					<span id="header-status">
 						아이디:

@@ -46,13 +46,13 @@ a {
 				<option value="product_no">개통모델</option>
 			</select>
 			<input type="button" value="검색" class="search-btn" onclick="fn_searchBtn()">
-			<input type="button" value="전체선택" onclick='fn_allSelect()' style="float:right;">
-			<input type="button" value="선택판매내역삭제" style="float:right; width:120px; margin-right: 5px;" onclick="fn_deleteSell()">
+			<input type="button" value="전체선택" onclick='fn_allSelect()' style="float: right;">
+			<input type="button" value="선택판매내역삭제" style="float: right; width: 120px; margin-right: 5px;" onclick="fn_deleteSell()">
 		</div>
-		
-			
 
-		
+
+
+
 
 	</div>
 	<table>
@@ -229,7 +229,7 @@ a {
 
 
 	</div>
-	
+
 	<!-- section contents -->
 </body>
 </html>
@@ -237,16 +237,25 @@ a {
     /* 일괄선택 */
     function fn_allSelect() {
         $(function () {
-            $("input[type='checkbox']").prop("checked", true);
+            if (!$("input[type='checkbox']").prop("checked")) {
+                $("input[type='checkbox']").prop("checked", true);
+            } else {
+                $("input[type='checkbox']").prop("checked", false);
+            }
         })
     }
 
     /* 삭제 */
     function fn_deleteSell() {
+        var checkBoxes = document.querySelectorAll('input[name="sell_no"]:checked')
+        
+        if(checkBoxes.length==0){
+            alert("최소 한개 이상 체크해주세요.");
+            return;
+        }
+        
         if (confirm("정말 해당 판매내역을 삭제하시겠습니까?")) {
             var sellNo = [];
-            var checkBoxes = document
-                    .querySelectorAll('input[name="sell_no"]:checked')
             checkBoxes.forEach(function (value, index) {
                 sellNo[index] = value.value;
                 console.log(sellNo[index]);
